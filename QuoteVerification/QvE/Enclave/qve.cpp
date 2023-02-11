@@ -486,6 +486,17 @@ static quote3_error_t extract_chain_from_quote(const uint8_t *p_quote,
     return ret;
 }
 
+int printDataf(const char* fmt, ...)
+{
+    char buf[BUFSIZ] = { '\0' };
+    va_list ap;
+    va_start(ap, fmt);
+    vsnprintf(buf, BUFSIZ, fmt, ap);
+    va_end(ap);
+    ocall_print_string(buf);
+    return (int)strnlen(buf, BUFSIZ - 1) + 1;
+}
+
 /**
  * Extract FMSPc and CA from a given quote with cert type 5.
  * @param p_quote[IN] - Pointer to a quote buffer.
@@ -505,6 +516,7 @@ static quote3_error_t extract_chain_from_quote(const uint8_t *p_quote,
 quote3_error_t get_fmspc_ca_from_quote(const uint8_t* p_quote, uint32_t quote_size,
     unsigned char* p_fmsp_from_quote, uint32_t fmsp_from_quote_size,
     unsigned char* p_ca_from_quote, uint32_t ca_from_quote_size) {
+    printDataf("\nAashish :: get_fmspc_ca_from_quote ::: Inside untrusted part\n");
     if (p_quote == NULL ||
         quote_size < QUOTE_MIN_SIZE ||
         !sgx_is_within_enclave(p_quote, quote_size) ||

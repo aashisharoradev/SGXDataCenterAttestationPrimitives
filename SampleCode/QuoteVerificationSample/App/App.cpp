@@ -35,6 +35,10 @@
 #include <string>
 #include <assert.h>
 #include <fstream>
+#include <iostream>
+#include <iomanip>
+#include <sstream>
+#include <string>
 #include <sgx_uae_launch.h>
 #include "sgx_urts.h"
 #include "Enclave_u.h"
@@ -65,6 +69,17 @@ typedef union _supp_ver_t{
     };
 } supp_ver_t;
 
+
+std::string hexStr(const uint8_t *data, uint32_t len)
+{
+     std::stringstream ss;
+     ss << std::hex;
+
+     for( size_t i(0) ; i < len; ++i )
+         ss << std::setw(2) << std::setfill('0') << (int)data[i];
+
+     return ss.str();
+}
 
 vector<uint8_t> readBinaryContent(const string& filePath)
 {
@@ -122,190 +137,15 @@ int ecdsa_quote_verification(vector<uint8_t> quote, bool use_qve)
 
 
     // Trusted quote verification
-    if (use_qve) {
-
-#ifndef TD_ENV
-        //set nonce
-        //
-        memcpy(qve_report_info.nonce.rand, rand_nonce, sizeof(rand_nonce));
-
-        //get target info of SampleISVEnclave. QvE will target the generated report to this enclave.
-        //
-        sgx_ret = sgx_create_enclave(SAMPLE_ISV_ENCLAVE, SGX_DEBUG_FLAG, &token, &updated, &eid, NULL);
-        if (sgx_ret != SGX_SUCCESS) {
-            printf("\tError: Can't load SampleISVEnclave. 0x%04x\n", sgx_ret);
-            return -1;
-        }
-        sgx_status_t get_target_info_ret;
-        sgx_ret = ecall_get_target_info(eid, &get_target_info_ret, &qve_report_info.app_enclave_target_info);
-        if (sgx_ret != SGX_SUCCESS || get_target_info_ret != SGX_SUCCESS) {
-            printf("\tError in sgx_get_target_info. 0x%04x\n", get_target_info_ret);
-        }
-        else {
-            printf("\tInfo: get target info successfully returned.\n");
-        }
-
-        //call DCAP quote verify library to set QvE loading policy
-        //
-        dcap_ret = sgx_qv_set_enclave_load_policy(SGX_QL_DEFAULT);
-        if (dcap_ret == SGX_QL_SUCCESS) {
-            printf("\tInfo: sgx_qv_set_enclave_load_policy successfully returned.\n");
-        }
-        else {
-            printf("\tError: sgx_qv_set_enclave_load_policy failed: 0x%04x\n", dcap_ret);
-        }
-
-        //call DCAP quote verify library to get supplemental latest version and data size
-        //version is a combination of major_version and minor version
-        //you can set the major version in 'supp_data.major_version' to get old version supplemental data
-        //only support major_version 3 right now
-        dcap_ret = tee_get_supplemental_data_version_and_size(quote.data(),
-                                            (uint32_t)quote.size(),
-                                            &latest_ver.version,
-                                            &supp_data.data_size);
-
-        if (dcap_ret == SGX_QL_SUCCESS && supp_data.data_size == sizeof(sgx_ql_qv_supplemental_t)) {
-            printf("\tInfo: tee_get_quote_supplemental_data_version_and_size successfully returned.\n");
-            printf("\tInfo: latest supplemental data major version: %d, minor version: %d, size: %d\n", latest_ver.major_version, latest_ver.minor_version, supp_data.data_size);
-            supp_data.p_data = (uint8_t*)malloc(supp_data.data_size);
-            if (supp_data.p_data != NULL) {
-                memset(supp_data.p_data, 0, supp_data.data_size);
-            }
-
-            //Just print error in sample
-            //
-            else {
-                printf("\tError: Cannot allocate memory for supplemental data.\n");
-            }
-        }
-        else {
-            if (dcap_ret != SGX_QL_SUCCESS)
-                printf("\tError: tee_get_quote_supplemental_data_size failed: 0x%04x\n", dcap_ret);
-
-            if (supp_data.data_size != sizeof(sgx_ql_qv_supplemental_t))
-                printf("\tWarning: Quote supplemental data size is different between DCAP QVL and QvE, please make sure you installed DCAP QVL and QvE from same release.\n");
-
-            supp_data.data_size = 0;
-        }
-
-        //set current time. This is only for sample use, please use trusted time in product.
-        //
-        current_time = time(NULL);
-
-
-        //call DCAP quote verify library for quote verification
-        //here you can choose 'trusted' or 'untrusted' quote verification by specifying parameter '&qve_report_info'
-        //if '&qve_report_info' is NOT NULL, this API will call Intel QvE to verify quote
-        //if '&qve_report_info' is NULL, this API will call 'untrusted quote verify lib' to verify quote, this mode doesn't rely on SGX capable system, but the results can not be cryptographically authenticated
-        dcap_ret = tee_verify_quote(
-            quote.data(), (uint32_t)quote.size(),
-            NULL,
-            current_time,
-            &collateral_expiration_status,
-            &quote_verification_result,
-            &qve_report_info,
-            &supp_data);
-        if (dcap_ret == SGX_QL_SUCCESS) {
-            printf("\tInfo: App: tee_verify_quote successfully returned.\n");
-        }
-        else {
-            printf("\tError: App: tee_verify_quote failed: 0x%04x\n", dcap_ret);
-        }
-
-
-        // Threshold of QvE ISV SVN. The ISV SVN of QvE used to verify quote must be greater or equal to this threshold
-        // e.g. You can check latest QvE ISVSVN from QvE configuration file on Github
-        // https://github.com/intel/SGXDataCenterAttestationPrimitives/blob/master/QuoteVerification/QvE/Enclave/linux/config.xml#L4
-        // or you can get latest QvE ISVSVN in QvE Identity JSON file from
-        // https://api.trustedservices.intel.com/sgx/certification/v4/qve/identity
-        // Make sure you are using trusted & latest QvE ISV SVN as threshold
-        // Warning: The function may return erroneous result if QvE ISV SVN has been modified maliciously.
-        //
-        sgx_isv_svn_t qve_isvsvn_threshold = 7;
-
-        //call sgx_dcap_tvl API in SampleISVEnclave to verify QvE's report and identity
-        //
-        sgx_ret = sgx_tvl_verify_qve_report_and_identity(eid,
-            &verify_qveid_ret,
-            quote.data(),
-            (uint32_t) quote.size(),
-            &qve_report_info,
-            current_time,
-            collateral_expiration_status,
-            quote_verification_result,
-            supp_data.p_data,
-            supp_data.data_size,
-            qve_isvsvn_threshold);
-
-        if (sgx_ret != SGX_SUCCESS || verify_qveid_ret != SGX_QL_SUCCESS) {
-            printf("\tError: Ecall: Verify QvE report and identity failed. 0x%04x\n", verify_qveid_ret);
-        }
-        else {
-            printf("\tInfo: Ecall: Verify QvE report and identity successfully returned.\n");
-        }
-
-        //check verification result
-        //
-        switch (quote_verification_result)
-        {
-        case SGX_QL_QV_RESULT_OK:
-            //check verification collateral expiration status
-            //this value should be considered in your own attestation/verification policy
-            //
-            if (collateral_expiration_status == 0) {
-                printf("\tInfo: App: Verification completed successfully.\n");
-                ret = 0;
-            }
-            else {
-                printf("\tWarning: App: Verification completed, but collateral is out of date based on 'expiration_check_date' you provided.\n");
-                ret = 1;
-            }
-
-            break;
-        case SGX_QL_QV_RESULT_CONFIG_NEEDED:
-        case SGX_QL_QV_RESULT_OUT_OF_DATE:
-        case SGX_QL_QV_RESULT_OUT_OF_DATE_CONFIG_NEEDED:
-        case SGX_QL_QV_RESULT_SW_HARDENING_NEEDED:
-        case SGX_QL_QV_RESULT_CONFIG_AND_SW_HARDENING_NEEDED:
-            printf("\tWarning: App: Verification completed with Non-terminal result: %x\n", quote_verification_result);
-            ret = 1;
-            break;
-        case SGX_QL_QV_RESULT_INVALID_SIGNATURE:
-        case SGX_QL_QV_RESULT_REVOKED:
-        case SGX_QL_QV_RESULT_UNSPECIFIED:
-        default:
-            printf("\tError: App: Verification completed with Terminal result: %x\n", quote_verification_result);
-            ret = -1;
-            break;
-        }
-
-        //check supplemental data if necessary
-        //
-        if (dcap_ret == SGX_QL_SUCCESS && supp_data.p_data != NULL && supp_data.data_size > 0) {
-            sgx_ql_qv_supplemental_t *p = (sgx_ql_qv_supplemental_t*)supp_data.p_data;
-
-            //you can check supplemental data based on your own attestation/verification policy
-            //here we only print supplemental data version for demo usage
-            //
-            printf("\tInfo: Supplemental data Major Version: %d\n", p->major_version);
-            printf("\tInfo: Supplemental data Minor Version: %d\n", p->minor_version);
-
-            //print SA list if exist, SA list is supported from version 3.1
-            //
-            if (p->version > 3 && strlen(p->sa_list) > 0) {
-                printf("\tInfo: Advisory ID: %s\n", p->sa_list);
-            }
-        }
-#endif
-    }
-
+    // Removed unused logic
 
     // Untrusted quote verification
-    else {
+    if (!use_qve) {
         //call DCAP quote verify library to get supplemental latest version and data size
         //version is a combination of major_version and minor version
         //you can set the major version in 'supp_data.major_version' to get old version supplemental data
         //only support major_version 3 right now
+     //   std::cout << "Original Quote "<< hexStr(quote.data(), (uint32_t)quote.size()) << std::endl;
         dcap_ret = tee_get_supplemental_data_version_and_size(quote.data(),
                                             (uint32_t)quote.size(),
                                             &latest_ver.version,
@@ -338,7 +178,7 @@ int ecdsa_quote_verification(vector<uint8_t> quote, bool use_qve)
         //set current time. This is only for sample purposes, in production mode a trusted time should be used.
         //
         current_time = time(NULL);
-
+        printf("\nAashish::: sizeof(sgx_ql_qv_supplemental_t) ::: %d" , sizeof(sgx_ql_qv_supplemental_t));
 
         //call DCAP quote verify library for quote verification
         //here you can choose 'trusted' or 'untrusted' quote verification by specifying parameter '&qve_report_info'
@@ -352,6 +192,8 @@ int ecdsa_quote_verification(vector<uint8_t> quote, bool use_qve)
             &quote_verification_result,
             NULL,
             &supp_data);
+
+        // std::cout << "Supplement Data "<< hexStr(supp_data.p_data, (uint32_t)supp_data.data_size) << std::endl;
         if (dcap_ret == SGX_QL_SUCCESS) {
             printf("\tInfo: App: tee_verify_quote successfully returned.\n");
         }

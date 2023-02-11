@@ -39,6 +39,10 @@
 #include "sgx_dcap_qv_internal.h"
 #include "sgx_qve_def.h"
 #include "tee_qv_class.h"
+#include <iostream>
+#include <iomanip>
+#include <sstream>
+#include <string>
 #include <stdlib.h>
 #include <stdio.h>
 #include <new>
@@ -55,6 +59,17 @@ sgx_thread_wait_untrusted_event_ocall_func_t p_sgx_thread_wait_untrusted_event_o
 sgx_thread_set_untrusted_event_ocall_func_t p_sgx_thread_set_untrusted_event_ocall = NULL;
 sgx_thread_setwait_untrusted_events_ocall_func_t p_sgx_thread_setwait_untrusted_events_ocall = NULL;
 sgx_thread_set_multiple_untrusted_events_ocall_func_t p_sgx_thread_set_multiple_untrusted_events_ocall = NULL;
+
+std::string hexStr(const uint8_t *data, uint32_t len)
+{
+     std::stringstream ss;
+     ss << std::hex;
+
+     for( size_t i(0) ; i < len; ++i )
+         ss << std::setw(2) << std::setfill('0') << (int)data[i];
+
+     return ss.str();
+}
 
 //redefine uRTS functions to remove sgx_urts library dependency during compilcation
 //
@@ -368,8 +383,9 @@ static quote3_error_t get_verification_supplemental_data_size_and_version(
         //create and initialize QvE
         //
         load_ret = initialize_enclave(&qve_eid);
-
+        printf("\n Aashish:: get_verification_supplemental_data_size_and_version :: load_ret :: %d\n", load_ret);
         if (tee_type == SGX_EVIDENCE) {
+            printf("\n Aashish:: get_verification_supplemental_data_size_and_version :: We are in SGX_EVIDENCE block\n");
             p_trusted_qv = new sgx_qv_trusted(qve_eid);
             p_untrusted_qv = new sgx_qv();
         }
@@ -380,9 +396,11 @@ static quote3_error_t get_verification_supplemental_data_size_and_version(
 
         if (load_ret != SGX_SUCCESS) {
             if (load_ret == SGX_ERROR_FEATURE_NOT_SUPPORTED) {
+                printf("\n Aashish:: get_verification_supplemental_data_size_and_version :: enclave not availaible \n");
                 qve_ret = SGX_QL_PSW_NOT_AVAILABLE;
             }
             else {
+                printf("\n Aashish:: get_verification_supplemental_data_size_and_version :: loading enclave failed \n");
                 SE_TRACE(SE_TRACE_DEBUG, "Warning: failed to load QvE.\n");
                 qve_ret = SGX_QL_ENCLAVE_LOAD_ERROR;
             }
@@ -406,13 +424,13 @@ static quote3_error_t get_verification_supplemental_data_size_and_version(
             trusted_size = 0;
             break;
         }
-
     } while (0);
 
     do {
         //call untrusted API to get supplemental data version
         //
         qve_ret = p_untrusted_qv->tee_get_supplemental_data_version(&untrusted_version.version);
+        printf("\n Aashish:: get_verification_supplemental_data_size_and_version :: untrusted_version.version :: %u\n", untrusted_version.version);
         if (qve_ret != SGX_QL_SUCCESS) {
             SE_TRACE(SE_TRACE_DEBUG, "Error: untrusted API qvl_get_quote_supplemental_data_version failed: 0x%04x\n", qve_ret);
             *p_data_size = 0;
@@ -422,12 +440,15 @@ static quote3_error_t get_verification_supplemental_data_size_and_version(
         //call untrusted API to get supplemental data size
         //
         qve_ret = p_untrusted_qv->tee_get_supplemental_data_size(&untrusted_size);
+        printf("\n Aashish:: get_verification_supplemental_data_size_and_version :: untrusted_size :: %u\n", untrusted_size);
         if (qve_ret != SGX_QL_SUCCESS) {
             SE_TRACE(SE_TRACE_DEBUG, "Error: untrusted API qvl_get_quote_supplemental_data_size failed: 0x%04x\n", qve_ret);
             *p_data_size = 0;
             break;
         }
-
+        printf("\n Aashish:: get_verification_supplemental_data_size_and_version :: trusted_version.version :: %u\n", trusted_version.version);
+        printf("\n Aashish:: get_verification_supplemental_data_size_and_version :: trusted_size :: %u\n", trusted_size);
+        printf("\n Aashish:: get_verification_supplemental_data_size_and_version :: VerNumMismatch :: %d\n", VerNumMismatch);
         if (VerNumMismatch) {
             if (trusted_version.version != untrusted_version.version || trusted_size != untrusted_size) {
                 SE_TRACE(SE_TRACE_DEBUG, "Error: Quote supplemental data version is different between trusted QvE and untrusted QVL.\n");
@@ -478,7 +499,7 @@ quote3_error_t tee_get_supplemental_data_version_and_size(
     tee_evidence_type_t tee_type = UNKNOWN_QUOTE_TYPE;
     // check quote type
     uint32_t *p_type = (uint32_t *) (p_quote + sizeof(uint16_t) * 2);
-
+    printf("\nAashish::: tee_get_supplemental_data_version_and_size ::: p_type ::::: %u \n", *p_type);
     if (*p_type == SGX_QUOTE_TYPE)
         tee_type = SGX_EVIDENCE;
     else if (*p_type == TDX_QUOTE_TYPE)
@@ -486,11 +507,18 @@ quote3_error_t tee_get_supplemental_data_version_and_size(
     else
         return SGX_QL_ERROR_INVALID_PARAMETER;
 
+    printf("\nAashish::: tee_get_supplemental_data_version_and_size ::: tee_type ::::: %d \n", tee_type);
     return get_verification_supplemental_data_size_and_version(p_data_size, p_version, tee_type);
 
 }
 
-
+void ocall_print_string(const char *str)
+{
+    /* Proxy/Bridge will check the length and null-terminate 
+     * the input string to prevent buffer overflow. 
+     */
+    printf("%s", str);
+}
 /**
  * Perform ECDSA quote verification
  **/
@@ -607,11 +635,16 @@ quote3_error_t tee_verify_evidence(
 
         //in case input collateral is NULL, dynamically load and call QPL to retrieve verification collateral
         //
+        printf("\n Aashish:: tee_verify_evidence ::: checking on p_quote_collateral :: here 1\n");
         if (NULL_POINTER(p_quote_collateral)) {
+            printf("\n Aashish:: tee_verify_evidence ::: checking on p_quote_collateral :: here 2\n");
 
             //extract fmspc and CA from the quote, these values are required inorder to query collateral from QPL
             //
+            printf("\n Aashish ::: tee_verify_evidence ::: fmspc_from_quote \n");
+            printf("\n Aashish ::: tee_verify_evidence ::: ca_from_quote \n");
             qve_ret = p_tee_qv->tee_get_fmspc_ca_from_quote(p_quote, quote_size, fmspc_from_quote, FMSPC_SIZE, ca_from_quote, CA_SIZE);
+            
             if (qve_ret == SGX_QL_SUCCESS) {
                 SE_TRACE(SE_TRACE_DEBUG, "Info: get_fmspc_ca_from_quote successfully returned.\n");
             }
@@ -955,6 +988,7 @@ quote3_error_t tee_verify_quote(
     sgx_ql_qe_report_info_t *p_qve_report_info,
     tee_supp_data_descriptor_t *p_supp_data_descriptor)
 {
+    printf("\nAashish :: tee_verify_quote :: We are here \n");
     quote3_error_t ret = SGX_QL_SUCCESS;
     supp_ver_t latest_version;
     uint32_t supp_data_size = 0;
@@ -966,6 +1000,8 @@ quote3_error_t tee_verify_quote(
         return SGX_QL_ERROR_INVALID_PARAMETER;
 
     ret = tee_get_supplemental_data_version_and_size(p_quote, quote_size, &latest_version.version, &tmp_size);
+    printf("\nAashish :: tee_verify_quote :: latest_version.version:: %u \n", latest_version.version);
+    printf("\nAashish :: tee_verify_quote :: tmp_size:: %u \n", tmp_size);
 
     if (ret != SGX_QL_SUCCESS)
         return ret;
@@ -1004,7 +1040,10 @@ quote3_error_t tee_verify_quote(
     catch (...) {
         return SGX_QL_ERROR_INVALID_PARAMETER;
     }
-
+    printf("\nAashish :: tee_verify_quote :: supp_data_size:: %u \n", supp_data_size);
+    printf("\nAashish :: tee_verify_quote :: p_supp_data:: %u \n", *p_supp_data);
+    std::cout << "\nAashish :: tee_verify_evidence ::: " << hexStr(p_quote, quote_size) << std::endl;
+    std::cout << "\nAashish :: tee_verify_quote :: p_quote_collateral ::: " << p_quote_collateral << std::endl;
     ret = tee_verify_evidence(
         p_quote,
         quote_size,

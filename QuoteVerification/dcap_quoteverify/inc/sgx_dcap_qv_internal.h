@@ -78,6 +78,8 @@ quote3_error_t qvl_get_fmspc_ca_from_quote(const uint8_t* p_quote, uint32_t quot
      unsigned char* p_fmsp_from_quote, uint32_t fmsp_from_quote_size,
      unsigned char* p_ca_from_quote, uint32_t ca_from_quote_size);
 
+void ocall_print_string(const char *str);
+
 #if defined(__cplusplus)
 }
 #endif

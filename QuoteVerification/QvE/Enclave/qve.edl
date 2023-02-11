@@ -71,6 +71,9 @@ struct _sgx_ql_qve_collateral_t
     uint32_t qe_identity_size;
 
 };
+untrusted {
+    void ocall_print_string([in, string] const char *str);
+};
 #endif //__QL_QV_COLLATERAL_T
 
 
@@ -108,6 +111,7 @@ struct _sgx_ql_qve_collateral_t
                                                [in, out, count=1]sgx_ql_qe_report_info_t *p_qve_report_info,
                                                uint32_t supplemental_data_size,
                                                [in, out, size=supplemental_data_size] uint8_t *p_supplemental_data);
+
 
 
 	};
