@@ -135,7 +135,7 @@ sgx_qcnl_error_t sgx_qcnl_get_pck_crl_chain(const char *ca,
     if (ca == NULL || (strcmp(ca, consts::CA_PLATFORM) != 0 && strcmp(ca, consts::CA_PROCESSOR) != 0)) {
         return SGX_QCNL_INVALID_PARAMETER;
     }
-
+    printf("Aashish ::: tee_get_verification_endorsement :: CertificationService \n ");
     CertificationService certificationService(custom_param_b64_string);
     return certificationService.get_pck_crl_chain(ca, ca_size, p_crl_chain, p_crl_chain_size);
 }
@@ -336,6 +336,7 @@ void sgx_qcnl_free_root_ca_crl(uint8_t *p_root_ca_crl) {
  */
 bool sgx_qcnl_get_api_version(uint16_t *p_major_ver, uint16_t *p_minor_ver) {
     string version = QcnlConfig::Instance()->getCollateralVersion();
+    printf("\nAashish :: sgx_qcnl_get_api_version ::: version %s\n", version.c_str());
     if (!version.empty()) {
         auto pos = version.find(".");
         if (pos != std::string::npos) {
@@ -354,8 +355,9 @@ bool sgx_qcnl_get_api_version(uint16_t *p_major_ver, uint16_t *p_minor_ver) {
             return false;
         }
     }
-
+    
     string url = QcnlConfig::Instance()->getCollateralServiceUrl();
+    printf("Aashish :: sgx_qcnl_get_api_version ::: URL %s", url.c_str());
     if (url.find("/v3/") != std::string::npos) {
         *p_major_ver = 3;
         *p_minor_ver = 0;

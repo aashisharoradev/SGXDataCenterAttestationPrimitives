@@ -672,6 +672,7 @@ quote3_error_t tee_verify_evidence(
                 break;
             }
             p_quote_collateral = qve_collaterals_from_qp;
+            printf("\n Aashish ::: tee_verify_evidence ::: p_quote_collateral :: p_quote_collateral->pck_crl\n %s \n", p_quote_collateral->pck_crl);
         }
 
         qve_ret = p_tee_qv->tee_verify_evidence(

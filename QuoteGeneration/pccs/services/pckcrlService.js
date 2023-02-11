@@ -47,6 +47,6 @@ export async function getPckCrl(ca, encoding) {
   if (!encoding || encoding.toUpperCase() != 'DER') {
     result['pckcrl'] = Buffer.from(result['pckcrl'], 'utf8').toString('hex');
   }
-
+  console.log('Aashish :::: getPckCrl ', result);
   return result;
 }

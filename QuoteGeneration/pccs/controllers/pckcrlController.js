@@ -44,10 +44,10 @@ export async function getPckCrl(req, res, next) {
     }
 
     let encoding = req.query.encoding;
-
+    console.log('Aashish :::: getPckCrl ::: Query', ca);
     // call service
     let pckcrlJson = await pckcrlService.getPckCrl(ca, encoding);
-
+    console.log('Aashish :::: getPckCrl ::: pckcrlJson :: ', pckcrlJson);
     // send response
     res
       .status(PccsStatus.PCCS_STATUS_SUCCESS[0])

@@ -627,7 +627,7 @@ sgx_qcnl_error_t CertificationService::get_pck_crl_chain(const char *ca,
     if ((ret = cacheProvider.get_certification(query_string, &pccs_resp_obj)) == SGX_QCNL_SUCCESS) {
         return resp_obj_to_pck_crl(&pccs_resp_obj, pp_crl_chain, p_crl_chain_size);
     }
-
+    printf("\n Aashish:: call to pccs service %s\n", QcnlConfig::Instance()->getCollateralServiceUrl().c_str());
     // Then try remote service
     CertificationProvider remoteProvider(QcnlConfig::Instance()->getCollateralServiceUrl());
     if ((ret = remoteProvider.get_certification(header_map, query_string, &pccs_resp_obj)) == SGX_QCNL_SUCCESS) {

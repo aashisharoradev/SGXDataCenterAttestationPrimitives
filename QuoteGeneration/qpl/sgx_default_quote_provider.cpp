@@ -207,23 +207,32 @@ quote3_error_t ql_get_quote_verification_collateral_internal(sgx_prod_type_t pro
         memset(*pp_quote_collateral, 0, sizeof(sgx_ql_qve_collateral_t));
 
         // Encode custom_param with Base64
+        printf("\nAashish ::: tee_get_verification_endorsement :: ql_get_quote_verification_collateral_internal ::: check custom_param\n");
         if (custom_param != NULL && custom_param_length != 0) {
+            printf("\nAashish ::: tee_get_verification_endorsement :: ql_get_quote_verification_collateral_internal ::: custom_param\n");
             base64_string = base64_encode(reinterpret_cast<const char *>(custom_param), custom_param_length);
             if (!base64_string) {
                 ret = SGX_QL_ERROR_OUT_OF_MEMORY;
                 break;
             }
         }
-
+        printf("\nAashish ::: tee_get_verification_endorsement :: ql_get_quote_verification_collateral_internal ::: check sgx_qcnl_get_api_version\n");
         // Set version
         if (!sgx_qcnl_get_api_version(&(*pp_quote_collateral)->major_version, &(*pp_quote_collateral)->minor_version)) {
+            printf("\nAashish ::: tee_get_verification_endorsement :: ql_get_quote_verification_collateral_internal ::: sgx_qcnl_get_api_version \n");
             qpl_log(SGX_QL_LOG_ERROR, "[QPL] QCNL is configured with an unsupported API version.\n");
             ret = SGX_QL_ERROR_UNEXPECTED;
             break;
         }
-
+        
+        printf("\nAashish ::: tee_get_verification_endorsement :: ql_get_quote_verification_collateral_internal ::: sgx_qcnl_get_api_version :: major %d :: minor :: %d \n",
+             (*pp_quote_collateral) -> major_version, (*pp_quote_collateral) -> minor_version);
+        
         // Set PCK CRL and certchain
+        printf("\nAashish ::: tee_get_verification_endorsement :: ql_get_quote_verification_collateral_internal ::: API call sgx_qcnl_get_pck_crl_chain %s \n", pck_ca);
         qcnl_ret = sgx_qcnl_get_pck_crl_chain(pck_ca, (uint16_t)strnlen(pck_ca, USHRT_MAX), base64_string, &p_pck_crl_chain, &pck_crl_chain_size);
+        printf("\nAashish ::: tee_get_verification_endorsement :: ql_get_quote_verification_collateral_internal ::: API Result base64_string %s \n", base64_string);
+        printf("\nAashish ::: tee_get_verification_endorsement :: ql_get_quote_verification_collateral_internal ::: API Result p_pck_crl_chain %s \n", p_pck_crl_chain);
         if (qcnl_ret != SGX_QCNL_SUCCESS) {
             qpl_log(SGX_QL_LOG_ERROR, "[QPL] Failed to get PCK CRL and certchain : 0x%04x\n", qcnl_ret);
             ret = qcnl_error_to_ql_error(qcnl_ret);
