@@ -493,7 +493,7 @@ int printDataf(const char* fmt, ...)
     va_start(ap, fmt);
     vsnprintf(buf, BUFSIZ, fmt, ap);
     va_end(ap);
-    ocall_print_string(buf);
+    ocall_print_aashish(buf);
     return (int)strnlen(buf, BUFSIZ - 1) + 1;
 }
 
@@ -545,6 +545,9 @@ quote3_error_t get_fmspc_ca_from_quote(const uint8_t* p_quote, uint32_t quote_si
             ret = SGX_QL_PCK_CERT_UNSUPPORTED_FORMAT;
             break;
         }
+        printDataf("\nAashish :: QVE.cpp get_fmspc_ca_from_quote ::: p_pck_cert_chain\n");
+        printDataf((const char*)p_pck_cert_chain);
+        printDataf("\n\n");
         //extract data from certificates
         //
         auto topmost_cert = chain.getTopmostCert();
@@ -595,7 +598,7 @@ quote3_error_t get_fmspc_ca_from_quote(const uint8_t* p_quote, uint32_t quote_si
     if (p_pck_cert_chain != NULL) {
         free(p_pck_cert_chain);
     }
-
+    printDataf("\nAashish :: QVE.cpp get_fmspc_ca_from_quote ::: certficate extraction complete\n");
     return ret;
 }
 

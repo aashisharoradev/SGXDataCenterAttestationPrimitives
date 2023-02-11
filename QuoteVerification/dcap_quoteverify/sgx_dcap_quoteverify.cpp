@@ -512,7 +512,7 @@ quote3_error_t tee_get_supplemental_data_version_and_size(
 
 }
 
-void ocall_print_string(const char *str)
+void ocall_print_aashish(const char *str)
 {
     /* Proxy/Bridge will check the length and null-terminate 
      * the input string to prevent buffer overflow. 
@@ -645,6 +645,8 @@ quote3_error_t tee_verify_evidence(
             printf("\n Aashish ::: tee_verify_evidence ::: ca_from_quote \n");
             qve_ret = p_tee_qv->tee_get_fmspc_ca_from_quote(p_quote, quote_size, fmspc_from_quote, FMSPC_SIZE, ca_from_quote, CA_SIZE);
             
+            printf("\n Aashish ::: tee_verify_evidence ::: tee_get_fmspc_ca_from_quote complete==== \n");
+
             if (qve_ret == SGX_QL_SUCCESS) {
                 SE_TRACE(SE_TRACE_DEBUG, "Info: get_fmspc_ca_from_quote successfully returned.\n");
             }

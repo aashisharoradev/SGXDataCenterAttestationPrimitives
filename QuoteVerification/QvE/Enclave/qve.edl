@@ -72,7 +72,7 @@ struct _sgx_ql_qve_collateral_t
 
 };
 untrusted {
-    void ocall_print_string([in, string] const char *str);
+    void ocall_print_aashish([in, string] const char *str);
 };
 #endif //__QL_QV_COLLATERAL_T
 
