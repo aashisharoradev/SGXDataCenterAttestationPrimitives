@@ -648,6 +648,7 @@ quote3_error_t tee_verify_evidence(
             printf("\n Aashish ::: tee_verify_evidence ::: tee_get_fmspc_ca_from_quote complete==== \n");
 
             if (qve_ret == SGX_QL_SUCCESS) {
+                printf("\n Aashish ::: Info: get_fmspc_ca_from_quote successfully returned.\n");
                 SE_TRACE(SE_TRACE_DEBUG, "Info: get_fmspc_ca_from_quote successfully returned.\n");
             }
             else {
@@ -663,6 +664,7 @@ quote3_error_t tee_verify_evidence(
                 (const char *)ca_from_quote,
                 &qve_collaterals_from_qp);
             if (qve_ret == SGX_QL_SUCCESS) {
+                printf("\nAashish ::: tee_verify_evidence ::: tee_get_verification_endorsement ::: sucessful\n");
                 SE_TRACE(SE_TRACE_DEBUG, "Info: dcap_retrieve_verification_collateral successfully returned.\n");
             }
             else {

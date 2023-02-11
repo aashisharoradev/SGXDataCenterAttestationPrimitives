@@ -185,7 +185,7 @@ quote3_error_t ql_get_quote_verification_collateral_internal(sgx_prod_type_t pro
         qpl_log(SGX_QL_LOG_ERROR, "[QPL] Invalid parameter.\n");
         return SGX_QL_ERROR_INVALID_PARAMETER;
     }
-
+    printf("\nAashish ::: tee_get_verification_endorsement :: ql_get_quote_verification_collateral_internal\n");
     uint8_t *p_pck_crl_chain = NULL;
     uint16_t pck_crl_chain_size = 0;
     uint8_t *p_tcbinfo = NULL;
@@ -371,6 +371,7 @@ quote3_error_t sgx_ql_get_quote_verification_collateral(const uint8_t *fmspc,
                                                         uint16_t fmspc_size, 
                                                         const char *pck_ca,
                                                         sgx_ql_qve_collateral_t **pp_quote_collateral) {
+    printf("\nAashish ::: tee_get_verification_endorsement :: sgx_ql_get_quote_verification_collateral\n");
     quote3_error_t ret = ql_get_quote_verification_collateral_internal(SGX_PROD_TYPE_SGX,
                                                                        fmspc,
                                                                        fmspc_size,

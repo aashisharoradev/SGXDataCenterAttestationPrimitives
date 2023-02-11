@@ -565,7 +565,7 @@ quote3_error_t get_fmspc_ca_from_quote(const uint8_t* p_quote, uint32_t quote_si
             ret = SGX_QL_PCK_CERT_UNSUPPORTED_FORMAT;
             break;
         }
-
+        //Aashish::: this is to find issuer type of certifcate leaf is it should be either Processor or Platform 
         auto fmspc_from_cert = topmost_pck_cert.getFmspc();
         auto issuer = topmost_cert->getIssuer().getCommonName();
         if (issuer.find(PROCESSOR_ISSUER) != std::string::npos) {
@@ -584,15 +584,25 @@ quote3_error_t get_fmspc_ca_from_quote(const uint8_t* p_quote, uint32_t quote_si
             ret = SGX_QL_PCK_CERT_UNSUPPORTED_FORMAT;
             break;
         }
+
         if (memcpy_s(p_fmsp_from_quote, fmsp_from_quote_size,
             fmspc_from_cert.data(), fmspc_from_cert.size()) != 0) {
             ret = SGX_QL_ERROR_UNEXPECTED;
             break;
         }
+        
+        printDataf("\nAashish :: QVE.cpp get_fmspc_ca_from_quote ::: fmspc_from_cert.data()\n");
+        printDataf((const char *)fmspc_from_cert.data());
+        printDataf("\n\n");
 
         ret = SGX_QL_SUCCESS;
     } while (0);
-
+    printDataf("\nAashish :: QVE.cpp get_fmspc_ca_from_quote ::: p_ca_from_quote\n");
+    printDataf((const char *)p_ca_from_quote);
+    printDataf("\n\n");
+    printDataf("\nAashish :: QVE.cpp get_fmspc_ca_from_quote ::: p_fmsp_from_quote\n");
+    printDataf((const char *)p_fmsp_from_quote);
+    printDataf("\n\n");
     //free allocated memory
     //
     if (p_pck_cert_chain != NULL) {

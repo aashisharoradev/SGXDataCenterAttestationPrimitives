@@ -133,6 +133,7 @@ bool sgx_dcap_load_qpl()
 
     do {
         if (g_qpl_path[0]) {
+            printf("\nAashish::: PSW library ::: PATH %s \n", g_qpl_path);
             g_qpl_handle = dlopen(g_qpl_path, RTLD_LAZY);
             if (NULL == g_qpl_handle) {
                 SE_TRACE(SE_TRACE_ERROR, "Couldn't find the Quote Provider library %s\n", g_qpl_path);
@@ -141,6 +142,7 @@ bool sgx_dcap_load_qpl()
              }
         }
         else {
+            printf("\nAashish::: PSW library ::: dynamic loading\n");
             //try to dynamically load libdcap_quoteprov.so
             g_qpl_handle = dlopen(SGX_QL_QUOTE_CONFIG_LIB_FILE_NAME, RTLD_LAZY);
 
