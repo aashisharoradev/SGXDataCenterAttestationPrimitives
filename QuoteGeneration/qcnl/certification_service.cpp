@@ -785,6 +785,7 @@ sgx_qcnl_error_t CertificationService::get_root_ca_crl(const char *root_ca_cdp_u
     }
 
     CertificationProvider remoteProvider(base_url);
+    printf("\n Aashish :: get_root_ca_crl %s%s", base_url.c_str(), query_string.c_str());
     if ((ret = remoteProvider.get_certification(header_map, query_string, &pccs_resp_obj)) == SGX_QCNL_SUCCESS) {
         if ((ret = resp_obj_to_root_ca_crl(&pccs_resp_obj, pp_root_ca_crl, p_root_ca_crl_size)) == SGX_QCNL_SUCCESS) {
             ret = cacheProvider.set_certification((uint32_t)(QcnlConfig::Instance()->getVerifyCollateralExpireHour() * 3600),

@@ -304,6 +304,7 @@ quote3_error_t ql_get_quote_verification_collateral_internal(sgx_prod_type_t pro
         ret = split_buffer(p_qe_identity, qe_identity_size, &(*pp_quote_collateral)->qe_identity, &(*pp_quote_collateral)->qe_identity_size,
                            &(*pp_quote_collateral)->qe_identity_issuer_chain, &(*pp_quote_collateral)->qe_identity_issuer_chain_size);
         printf("\nAashish ::: tee_get_verification_endorsement :: ql_get_quote_verification_collateral_internal ::: (*pp_quote_collateral)->qe_identity :::  %s \n", (*pp_quote_collateral)->qe_identity);
+        printf("\nAashish ::: tee_get_verification_endorsement :: ql_get_quote_verification_collateral_internal ::: (*pp_quote_collateral)->qe_identity_issuer_chain :::  %s \n", (*pp_quote_collateral)->qe_identity_issuer_chain);
         
         if (ret != SGX_QL_SUCCESS) {
             qpl_log(SGX_QL_LOG_ERROR, "[QPL] Failed to process QE identity.\n");
@@ -318,6 +319,7 @@ quote3_error_t ql_get_quote_verification_collateral_internal(sgx_prod_type_t pro
             break;
         }
         string root_ca_cdp_url = get_cdp_url_from_pem_cert(str_issuer_chain.substr(pos).c_str());
+        printf("\nAashish ::: tee_get_verification_endorsement :: ql_get_quote_verification_collateral_internal ::: root_ca_cdp_url :::  %s \n", root_ca_cdp_url.c_str());
         if (root_ca_cdp_url.empty()) {
             qpl_log(SGX_QL_LOG_ERROR, "[QPL] Failed to get root CA CDP Point.\n");
             break;
@@ -326,6 +328,7 @@ quote3_error_t ql_get_quote_verification_collateral_internal(sgx_prod_type_t pro
         // Set Root CA CRL
         qcnl_ret = sgx_qcnl_get_root_ca_crl(root_ca_cdp_url.c_str(), base64_string, reinterpret_cast<uint8_t **>(&(*pp_quote_collateral)->root_ca_crl),
                                             reinterpret_cast<uint16_t *>(&(*pp_quote_collateral)->root_ca_crl_size));
+        printf("\nAashish ::: tee_get_verification_endorsement :: ql_get_quote_verification_collateral_internal ::: (*pp_quote_collateral)->root_ca_crl :::  %s \n", (*pp_quote_collateral)->root_ca_crl);
         if (qcnl_ret != SGX_QCNL_SUCCESS) {
             qpl_log(SGX_QL_LOG_ERROR, "[QPL] Failed to get root CA CRL : 0x%04x\n", qcnl_ret);
             ret = qcnl_error_to_ql_error(qcnl_ret);

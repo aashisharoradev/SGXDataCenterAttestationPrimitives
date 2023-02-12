@@ -57,6 +57,8 @@ quote3_error_t sgx_qv::tee_verify_evidence(
     uint32_t supplemental_data_size,
     uint8_t *p_supplemental_data) {
 
+    printf("\n Aashish:: sgx_qv::tee_verify_evidence :: %d\n", *p_collateral_expiration_status);
+
     return sgx_qvl_verify_quote(
         p_quote,
         quote_size,

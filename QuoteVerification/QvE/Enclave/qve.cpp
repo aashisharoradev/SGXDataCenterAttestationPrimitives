@@ -1414,17 +1414,20 @@ quote3_error_t sgx_qve_verify_quote(
     //in case of any invalid result parameter, set outputs_set = 0 and then return invalid (after setting
     //default values of valid result parameters)
     //
+    printDataf("\n Aashish :::tee_verify_evidence ::: sgx_qve_verify_quote final check \n");
     bool outputs_set = 1;
     if (p_collateral_expiration_status &&
         sgx_is_within_enclave(p_collateral_expiration_status, sizeof(*p_collateral_expiration_status))) {
+            printDataf("\n Aashish :::tee_verify_evidence ::: sgx_qve_verify_quote sgx_is_within_enclave check \n");
         *p_collateral_expiration_status = 1;
     }
     else {
         outputs_set = 0;
     }
-
+    printDataf("\n Aashish :::tee_verify_evidence ::: sgx_qve_verify_quote p_quote_verification_result final check \n");
     if (p_quote_verification_result &&
         sgx_is_within_enclave(p_quote_verification_result, sizeof(*p_quote_verification_result))) {
+            printDataf("\n Aashish :::tee_verify_evidence ::: sgx_qve_verify_quote sgx_is_within_enclave check \n");
         *p_quote_verification_result = SGX_QL_QV_RESULT_UNSPECIFIED;
     }
     else {
@@ -1506,6 +1509,9 @@ quote3_error_t sgx_qve_verify_quote(
         //extract PCK Cert chain from the given quote
         //
         ret = extract_chain_from_quote(p_quote, quote_size, &pck_cert_chain_size, &p_pck_cert_chain);
+        printDataf("\nAashish :::tee_verify_evidence ::: sgx_qve_verify_quote ::: extract_chain_from_quote \n");
+        printDataf((const char*) p_pck_cert_chain);
+        printDataf("\n");
         if (ret != SGX_QL_SUCCESS || !p_pck_cert_chain) {
             break;
         }
@@ -1534,11 +1540,13 @@ quote3_error_t sgx_qve_verify_quote(
 
         //if user provide DER encoding Root CA CRL, try to convert it to hex encoding
         //
+        printDataf("\nAashish :::tee_verify_evidence ::: sgx_qve_verify_quote ::: root_crl \n");
         if (!check_pem_crl(p_quote_collateral->root_ca_crl, p_quote_collateral->root_ca_crl_size)) {
             if (!check_hex_crl(p_quote_collateral->root_ca_crl, p_quote_collateral->root_ca_crl_size)) {
-
+                printDataf("\nAashish :::tee_verify_evidence ::: sgx_qve_verify_quote ::: root_crl inside if \n");
                 root_crl = bin2hex(p_quote_collateral->root_ca_crl, p_quote_collateral->root_ca_crl_size);
-
+                printDataf(root_crl.c_str());
+                printDataf("\n");
                 if (root_crl.empty())
                     break;
             }
@@ -1546,11 +1554,13 @@ quote3_error_t sgx_qve_verify_quote(
 
         //if user provide DER encoding PCK CRL, try to convert it to hex encoding
         //
+        printDataf("\nAashish :::tee_verify_evidence ::: sgx_qve_verify_quote ::: pck_crl \n");
         if (!check_pem_crl(p_quote_collateral->pck_crl, p_quote_collateral->pck_crl_size)) {
             if (!check_hex_crl(p_quote_collateral->pck_crl, p_quote_collateral->pck_crl_size)) {
-
+                printDataf("\nAashish :::tee_verify_evidence ::: sgx_qve_verify_quote ::: pck_crl inside if \n");
                 pck_crl = bin2hex(p_quote_collateral->pck_crl, p_quote_collateral->pck_crl_size);
-
+                printDataf(pck_crl.c_str());
+                printDataf("\n");
                 if (pck_crl.empty())
                     break;
             }
@@ -1562,13 +1572,19 @@ quote3_error_t sgx_qve_verify_quote(
 
         if (!root_crl.empty())
             crls[0] = root_crl.c_str();
-        else
+        else {
+            printDataf("\nAashish :::tee_verify_evidence ::: sgx_qve_verify_quote ::: root_crl from p_quote_collateral if \n");
             crls[0] = p_quote_collateral->root_ca_crl;
+        }
+            
 
         if (!pck_crl.empty())
             crls[1] = pck_crl.c_str();
-        else
+        else {
+            printDataf("\nAashish :::tee_verify_evidence ::: sgx_qve_verify_quote ::: pck_crl from p_quote_collateral if \n");
             crls[1] = p_quote_collateral->pck_crl;
+        }
+            
 
 
         //extract root CA from PCK cert chain in quote
@@ -1604,6 +1620,9 @@ quote3_error_t sgx_qve_verify_quote(
         //convert root cert to string
         //
         root_cert_str = root_cert_x509.getPem();
+        printDataf("\n Aashish::: root_cert_str ::: \n");
+        printDataf(root_cert_str.c_str());
+        printDataf("\n");
         if (root_cert_str.empty()) {
             ret = SGX_QL_PCK_CERT_CHAIN_ERROR;
             break;
