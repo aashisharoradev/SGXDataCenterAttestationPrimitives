@@ -299,6 +299,7 @@ Status sgxAttestationVerifyEnclaveIdentity(const char *enclaveIdentityString, co
 Status sgxAttestationVerifyQuote(const uint8_t* rawQuote, uint32_t quoteSize, const char *pemPckCertificate, const char* pckCrl,
                                  const char* tcbInfoJson, const char* qeIdentityJson)
 {
+    std::cout << "Aashish:: this is quote verification " << std::endl;
     /// 4.1.2.4.1
     if(!rawQuote ||
        !pemPckCertificate ||
