@@ -640,7 +640,7 @@ quote3_error_t tee_verify_evidence(
             printf("\n Aashish:: tee_verify_evidence ::: checking on p_quote_collateral :: here 2\n");
 
             //extract fmspc and CA from the quote, these values are required inorder to query collateral from QPL
-            //
+            // fmspc is a oID from the pck x509 certificate
             printf("\n Aashish ::: tee_verify_evidence ::: fmspc_from_quote \n");
             printf("\n Aashish ::: tee_verify_evidence ::: ca_from_quote \n");
             qve_ret = p_tee_qv->tee_get_fmspc_ca_from_quote(p_quote, quote_size, fmspc_from_quote, FMSPC_SIZE, ca_from_quote, CA_SIZE);

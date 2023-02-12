@@ -134,6 +134,7 @@ static quote3_error_t split_buffer(uint8_t *in_buf, uint16_t in_buf_size, char *
 
     string s0((char *)in_buf, in_buf_size);
     size_t pos = s0.find(delimiter);
+    
     if (pos == string::npos) {
         qpl_log(SGX_QL_LOG_ERROR, "[QPL] Invalid certificate chain.\n");
         return SGX_QL_MESSAGE_ERROR;
@@ -185,7 +186,13 @@ quote3_error_t ql_get_quote_verification_collateral_internal(sgx_prod_type_t pro
         qpl_log(SGX_QL_LOG_ERROR, "[QPL] Invalid parameter.\n");
         return SGX_QL_ERROR_INVALID_PARAMETER;
     }
+    
     printf("\nAashish ::: tee_get_verification_endorsement :: ql_get_quote_verification_collateral_internal\n");
+    printf("\nAashish ::: tee_get_verification_endorsement :: ql_get_quote_verification_collateral_internal:: fmspc \n");
+    for(size_t i = 0; i < fmspc_size; i++) {
+        printf("%d", fmspc[i]);
+    }
+    printf("\n");
     uint8_t *p_pck_crl_chain = NULL;
     uint16_t pck_crl_chain_size = 0;
     uint8_t *p_tcbinfo = NULL;
@@ -241,17 +248,21 @@ quote3_error_t ql_get_quote_verification_collateral_internal(sgx_prod_type_t pro
 
         ret = split_buffer(p_pck_crl_chain, pck_crl_chain_size, &(*pp_quote_collateral)->pck_crl, &(*pp_quote_collateral)->pck_crl_size,
                            &(*pp_quote_collateral)->pck_crl_issuer_chain, &(*pp_quote_collateral)->pck_crl_issuer_chain_size);
+        printf("\nAashish ::: tee_get_verification_endorsement :: ql_get_quote_verification_collateral_internal :::  pck_crl \n %s \n", (*pp_quote_collateral)->pck_crl);
+        printf("\nAashish ::: tee_get_verification_endorsement :: ql_get_quote_verification_collateral_internal ::: API Result\n %s \n", (*pp_quote_collateral)->pck_crl_issuer_chain);
+
         if (ret != SGX_QL_SUCCESS) {
             qpl_log(SGX_QL_LOG_ERROR, "[QPL] Failed to process PCK CRL.\n");
             break;
         }
-
+        printf("\nAashish ::: tee_get_verification_endorsement :: ql_get_quote_verification_collateral_internal ::: prod_type %d \n", prod_type);
         // Set TCBInfo and certchain
         if (prod_type == SGX_PROD_TYPE_SGX) {
             qcnl_ret = sgx_qcnl_get_tcbinfo(reinterpret_cast<const char *>(fmspc), fmspc_size, base64_string, &p_tcbinfo, &tcbinfo_size);
         } else {
             qcnl_ret = tdx_qcnl_get_tcbinfo(reinterpret_cast<const char *>(fmspc), fmspc_size, base64_string, &p_tcbinfo, &tcbinfo_size);
         } 
+       // printf("\nAashish ::: tee_get_verification_endorsement :: ql_get_quote_verification_collateral_internal ::: p_tcbinfo ::: API Result\n %s \n", p_tcbinfo);
 
         if (qcnl_ret != SGX_QCNL_SUCCESS) {
             qpl_log(SGX_QL_LOG_ERROR, "[QPL] Failed to get TCBInfo : 0x%04x\n", qcnl_ret);
@@ -265,6 +276,8 @@ quote3_error_t ql_get_quote_verification_collateral_internal(sgx_prod_type_t pro
 
         ret = split_buffer(p_tcbinfo, tcbinfo_size, &(*pp_quote_collateral)->tcb_info, &(*pp_quote_collateral)->tcb_info_size,
                            &(*pp_quote_collateral)->tcb_info_issuer_chain, &(*pp_quote_collateral)->tcb_info_issuer_chain_size);
+       // printf("\nAashish ::: tee_get_verification_endorsement :: ql_get_quote_verification_collateral_internal ::: p_tcbinfo ::: (*pp_quote_collateral)->tcb_info \n %s \n", (*pp_quote_collateral)->tcb_info);
+        printf("\nAashish ::: tee_get_verification_endorsement :: ql_get_quote_verification_collateral_internal ::: p_tcbinfo ::: (*pp_quote_collateral)->tcb_info_issuer_chain \n %s \n", (*pp_quote_collateral)->tcb_info_issuer_chain);
         if (ret != SGX_QL_SUCCESS) {
             qpl_log(SGX_QL_LOG_ERROR, "[QPL] Failed to process TCBInfo.\n");
             break;
@@ -276,6 +289,7 @@ quote3_error_t ql_get_quote_verification_collateral_internal(sgx_prod_type_t pro
             qe_type = SGX_QE_TYPE_ECDSA;
         else qe_type = SGX_QE_TYPE_TD;
 
+        printf("\nAashish ::: tee_get_verification_endorsement :: ql_get_quote_verification_collateral_internal ::: qe_type :::  %d \n", qe_type);
         qcnl_ret = sgx_qcnl_get_qe_identity(qe_type, base64_string, &p_qe_identity, &qe_identity_size);
         if (qcnl_ret != SGX_QCNL_SUCCESS) {
             qpl_log(SGX_QL_LOG_ERROR, "[QPL] Failed to get QE identity : 0x%04x\n", qcnl_ret);
@@ -289,6 +303,8 @@ quote3_error_t ql_get_quote_verification_collateral_internal(sgx_prod_type_t pro
 
         ret = split_buffer(p_qe_identity, qe_identity_size, &(*pp_quote_collateral)->qe_identity, &(*pp_quote_collateral)->qe_identity_size,
                            &(*pp_quote_collateral)->qe_identity_issuer_chain, &(*pp_quote_collateral)->qe_identity_issuer_chain_size);
+        printf("\nAashish ::: tee_get_verification_endorsement :: ql_get_quote_verification_collateral_internal ::: (*pp_quote_collateral)->qe_identity :::  %s \n", (*pp_quote_collateral)->qe_identity);
+        
         if (ret != SGX_QL_SUCCESS) {
             qpl_log(SGX_QL_LOG_ERROR, "[QPL] Failed to process QE identity.\n");
             break;

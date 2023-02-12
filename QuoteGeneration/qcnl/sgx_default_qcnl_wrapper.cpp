@@ -176,7 +176,7 @@ sgx_qcnl_error_t qcnl_get_tcbinfo_internal(sgx_prod_type_t prod_type,
     if (fmspc == NULL || fmspc_size != consts::FMSPC_SIZE) {
         return SGX_QCNL_INVALID_PARAMETER;
     }
-
+    printf("\n Aashish ::: qcnl_get_tcbinfo_internal \n %s\n", fmspc);
     CertificationService certificationService(custom_param_b64_string);
     return certificationService.get_tcbinfo(prod_type, fmspc, fmspc_size, p_tcbinfo, p_tcbinfo_size);
 }

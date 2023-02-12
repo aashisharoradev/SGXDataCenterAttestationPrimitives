@@ -534,6 +534,9 @@ quote3_error_t get_fmspc_ca_from_quote(const uint8_t* p_quote, uint32_t quote_si
 
     do {
         ret = extract_chain_from_quote(p_quote, quote_size, &pck_cert_chain_size, &p_pck_cert_chain);
+        printDataf("\nAashish :: get_fmspc_ca_from_quote :: extract_chain_from_quote\n");
+        printDataf((const char*) p_pck_cert_chain);
+        printDataf("\n");
         if (ret != SGX_QL_SUCCESS || p_pck_cert_chain == NULL || pck_cert_chain_size == 0) {
             break;
         }

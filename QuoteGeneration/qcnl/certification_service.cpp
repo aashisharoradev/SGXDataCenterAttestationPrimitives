@@ -673,6 +673,8 @@ sgx_qcnl_error_t CertificationService::get_tcbinfo(sgx_prod_type_t prod_type,
     }
 
     CertificationProvider remoteProvider(base_url);
+    printf("\n Aashish :: TCB INFO :: base_url \n %s \n", base_url.c_str());
+    printf("\n Aashish :: TCB INFO :: query_string \n %s \n", query_string.c_str());
     if ((ret = remoteProvider.get_certification(header_map, query_string, &pccs_resp_obj)) == SGX_QCNL_SUCCESS) {
         if ((ret = resp_obj_to_tcbinfo(&pccs_resp_obj, pp_tcbinfo, p_tcbinfo_size)) == SGX_QCNL_SUCCESS) {
             ret = cacheProvider.set_certification((uint32_t)(QcnlConfig::Instance()->getVerifyCollateralExpireHour() * 3600),
@@ -713,6 +715,7 @@ sgx_qcnl_error_t CertificationService::get_qe_identity(sgx_qe_type_t qe_type,
     }
 
     CertificationProvider remoteProvider(base_url);
+    printf("\nAashish::get_qe_identity url %s%s\n", base_url.c_str(), query_string.c_str());
     if ((ret = remoteProvider.get_certification(header_map, query_string, &pccs_resp_obj)) == SGX_QCNL_SUCCESS) {
         if ((ret = resp_obj_to_qe_identity(&pccs_resp_obj, pp_qe_identity, p_qe_identity_size)) == SGX_QCNL_SUCCESS) {
             ret = cacheProvider.set_certification((uint32_t)(QcnlConfig::Instance()->getVerifyCollateralExpireHour() * 3600),
