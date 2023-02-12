@@ -249,7 +249,7 @@ quote3_error_t ql_get_quote_verification_collateral_internal(sgx_prod_type_t pro
         ret = split_buffer(p_pck_crl_chain, pck_crl_chain_size, &(*pp_quote_collateral)->pck_crl, &(*pp_quote_collateral)->pck_crl_size,
                            &(*pp_quote_collateral)->pck_crl_issuer_chain, &(*pp_quote_collateral)->pck_crl_issuer_chain_size);
         printf("\nAashish ::: tee_get_verification_endorsement :: ql_get_quote_verification_collateral_internal :::  pck_crl \n %s \n", (*pp_quote_collateral)->pck_crl);
-        printf("\nAashish ::: tee_get_verification_endorsement :: ql_get_quote_verification_collateral_internal ::: API Result\n %s \n", (*pp_quote_collateral)->pck_crl_issuer_chain);
+        printf("\nAashish ::: tee_get_verification_endorsement :: ql_get_quote_verification_collateral_internal :::  pck_crl_issuer_chain \n %s \n", (*pp_quote_collateral)->pck_crl_issuer_chain);
 
         if (ret != SGX_QL_SUCCESS) {
             qpl_log(SGX_QL_LOG_ERROR, "[QPL] Failed to process PCK CRL.\n");
@@ -276,7 +276,7 @@ quote3_error_t ql_get_quote_verification_collateral_internal(sgx_prod_type_t pro
 
         ret = split_buffer(p_tcbinfo, tcbinfo_size, &(*pp_quote_collateral)->tcb_info, &(*pp_quote_collateral)->tcb_info_size,
                            &(*pp_quote_collateral)->tcb_info_issuer_chain, &(*pp_quote_collateral)->tcb_info_issuer_chain_size);
-       // printf("\nAashish ::: tee_get_verification_endorsement :: ql_get_quote_verification_collateral_internal ::: p_tcbinfo ::: (*pp_quote_collateral)->tcb_info \n %s \n", (*pp_quote_collateral)->tcb_info);
+        printf("\nAashish ::: tee_get_verification_endorsement :: ql_get_quote_verification_collateral_internal ::: p_tcbinfo ::: (*pp_quote_collateral)->tcb_info \n %s \n", (*pp_quote_collateral)->tcb_info);
         printf("\nAashish ::: tee_get_verification_endorsement :: ql_get_quote_verification_collateral_internal ::: p_tcbinfo ::: (*pp_quote_collateral)->tcb_info_issuer_chain \n %s \n", (*pp_quote_collateral)->tcb_info_issuer_chain);
         if (ret != SGX_QL_SUCCESS) {
             qpl_log(SGX_QL_LOG_ERROR, "[QPL] Failed to process TCBInfo.\n");

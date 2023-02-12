@@ -718,11 +718,84 @@ static quote3_error_t qve_get_collateral_dates(const CertificateChain* p_cert_ch
         *p_latest_issue_date = 0;
         *p_latest_expiration_date = 0;
 
+        /*
+        Aashish ::: 
+        p_quote_collateral->qe_identity_issuer_chain
+        -----BEGIN CERTIFICATE-----
+MIICizCCAjKgAwIBAgIUfjiC1ftVKUpASY5FhAPpFJG99FUwCgYIKoZIzj0EAwIw
+aDEaMBgGA1UEAwwRSW50ZWwgU0dYIFJvb3QgQ0ExGjAYBgNVBAoMEUludGVsIENv
+cnBvcmF0aW9uMRQwEgYDVQQHDAtTYW50YSBDbGFyYTELMAkGA1UECAwCQ0ExCzAJ
+BgNVBAYTAlVTMB4XDTE4MDUyMTEwNTAxMFoXDTI1MDUyMTEwNTAxMFowbDEeMBwG
+A1UEAwwVSW50ZWwgU0dYIFRDQiBTaWduaW5nMRowGAYDVQQKDBFJbnRlbCBDb3Jw
+b3JhdGlvbjEUMBIGA1UEBwwLU2FudGEgQ2xhcmExCzAJBgNVBAgMAkNBMQswCQYD
+VQQGEwJVUzBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABENFG8xzydWRfK92bmGv
+P+mAh91PEyV7Jh6FGJd5ndE9aBH7R3E4A7ubrlh/zN3C4xvpoouGlirMba+W2lju
+ypajgbUwgbIwHwYDVR0jBBgwFoAUImUM1lqdNInzg7SVUr9QGzknBqwwUgYDVR0f
+BEswSTBHoEWgQ4ZBaHR0cHM6Ly9jZXJ0aWZpY2F0ZXMudHJ1c3RlZHNlcnZpY2Vz
+LmludGVsLmNvbS9JbnRlbFNHWFJvb3RDQS5kZXIwHQYDVR0OBBYEFH44gtX7VSlK
+QEmORYQD6RSRvfRVMA4GA1UdDwEB/wQEAwIGwDAMBgNVHRMBAf8EAjAAMAoGCCqG
+SM49BAMCA0cAMEQCIB9C8wOAN/ImxDtGACV246KcqjagZOR0kyctyBrsGGJVAiAj
+ftbrNGsGU8YH211dRiYNoPPu19Zp/ze8JmhujB0oBw==
+-----END CERTIFICATE-----
+-----BEGIN CERTIFICATE-----
+MIICjzCCAjSgAwIBAgIUImUM1lqdNInzg7SVUr9QGzknBqwwCgYIKoZIzj0EAwIw
+aDEaMBgGA1UEAwwRSW50ZWwgU0dYIFJvb3QgQ0ExGjAYBgNVBAoMEUludGVsIENv
+cnBvcmF0aW9uMRQwEgYDVQQHDAtTYW50YSBDbGFyYTELMAkGA1UECAwCQ0ExCzAJ
+BgNVBAYTAlVTMB4XDTE4MDUyMTEwNDUxMFoXDTQ5MTIzMTIzNTk1OVowaDEaMBgG
+A1UEAwwRSW50ZWwgU0dYIFJvb3QgQ0ExGjAYBgNVBAoMEUludGVsIENvcnBvcmF0
+aW9uMRQwEgYDVQQHDAtTYW50YSBDbGFyYTELMAkGA1UECAwCQ0ExCzAJBgNVBAYT
+AlVTMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEC6nEwMDIYZOj/iPWsCzaEKi7
+1OiOSLRFhWGjbnBVJfVnkY4u3IjkDYYL0MxO4mqsyYjlBalTVYxFP2sJBK5zlKOB
+uzCBuDAfBgNVHSMEGDAWgBQiZQzWWp00ifODtJVSv1AbOScGrDBSBgNVHR8ESzBJ
+MEegRaBDhkFodHRwczovL2NlcnRpZmljYXRlcy50cnVzdGVkc2VydmljZXMuaW50
+ZWwuY29tL0ludGVsU0dYUm9vdENBLmRlcjAdBgNVHQ4EFgQUImUM1lqdNInzg7SV
+Ur9QGzknBqwwDgYDVR0PAQH/BAQDAgEGMBIGA1UdEwEB/wQIMAYBAf8CAQEwCgYI
+KoZIzj0EAwIDSQAwRgIhAOW/5QkR+S9CiSDcNoowLuPRLsWGf/Yi7GSX94BgwTwg
+AiEA4J0lrHoMs+Xo5o/sX6O9QWxHRAvZUGOdRQ7cvqRXaqI=
+-----END CERTIFICATE-----
+        */
+
         CertificateChain qe_identity_issuer_chain;
         if (qe_identity_issuer_chain.parse((reinterpret_cast<const char*>(p_quote_collateral->qe_identity_issuer_chain))) != STATUS_OK) {
             ret = SGX_QL_PCK_CERT_CHAIN_ERROR;
             break;
         }
+        /*
+        Aashish ::: 
+        p_quote_collateral->tcb_info_issuer_chain example
+         -----BEGIN CERTIFICATE-----
+MIICizCCAjKgAwIBAgIUfjiC1ftVKUpASY5FhAPpFJG99FUwCgYIKoZIzj0EAwIw
+aDEaMBgGA1UEAwwRSW50ZWwgU0dYIFJvb3QgQ0ExGjAYBgNVBAoMEUludGVsIENv
+cnBvcmF0aW9uMRQwEgYDVQQHDAtTYW50YSBDbGFyYTELMAkGA1UECAwCQ0ExCzAJ
+BgNVBAYTAlVTMB4XDTE4MDUyMTEwNTAxMFoXDTI1MDUyMTEwNTAxMFowbDEeMBwG
+A1UEAwwVSW50ZWwgU0dYIFRDQiBTaWduaW5nMRowGAYDVQQKDBFJbnRlbCBDb3Jw
+b3JhdGlvbjEUMBIGA1UEBwwLU2FudGEgQ2xhcmExCzAJBgNVBAgMAkNBMQswCQYD
+VQQGEwJVUzBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABENFG8xzydWRfK92bmGv
+P+mAh91PEyV7Jh6FGJd5ndE9aBH7R3E4A7ubrlh/zN3C4xvpoouGlirMba+W2lju
+ypajgbUwgbIwHwYDVR0jBBgwFoAUImUM1lqdNInzg7SVUr9QGzknBqwwUgYDVR0f
+BEswSTBHoEWgQ4ZBaHR0cHM6Ly9jZXJ0aWZpY2F0ZXMudHJ1c3RlZHNlcnZpY2Vz
+LmludGVsLmNvbS9JbnRlbFNHWFJvb3RDQS5kZXIwHQYDVR0OBBYEFH44gtX7VSlK
+QEmORYQD6RSRvfRVMA4GA1UdDwEB/wQEAwIGwDAMBgNVHRMBAf8EAjAAMAoGCCqG
+SM49BAMCA0cAMEQCIB9C8wOAN/ImxDtGACV246KcqjagZOR0kyctyBrsGGJVAiAj
+ftbrNGsGU8YH211dRiYNoPPu19Zp/ze8JmhujB0oBw==
+-----END CERTIFICATE-----
+-----BEGIN CERTIFICATE-----
+MIICjzCCAjSgAwIBAgIUImUM1lqdNInzg7SVUr9QGzknBqwwCgYIKoZIzj0EAwIw
+aDEaMBgGA1UEAwwRSW50ZWwgU0dYIFJvb3QgQ0ExGjAYBgNVBAoMEUludGVsIENv
+cnBvcmF0aW9uMRQwEgYDVQQHDAtTYW50YSBDbGFyYTELMAkGA1UECAwCQ0ExCzAJ
+BgNVBAYTAlVTMB4XDTE4MDUyMTEwNDUxMFoXDTQ5MTIzMTIzNTk1OVowaDEaMBgG
+A1UEAwwRSW50ZWwgU0dYIFJvb3QgQ0ExGjAYBgNVBAoMEUludGVsIENvcnBvcmF0
+aW9uMRQwEgYDVQQHDAtTYW50YSBDbGFyYTELMAkGA1UECAwCQ0ExCzAJBgNVBAYT
+AlVTMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEC6nEwMDIYZOj/iPWsCzaEKi7
+1OiOSLRFhWGjbnBVJfVnkY4u3IjkDYYL0MxO4mqsyYjlBalTVYxFP2sJBK5zlKOB
+uzCBuDAfBgNVHSMEGDAWgBQiZQzWWp00ifODtJVSv1AbOScGrDBSBgNVHR8ESzBJ
+MEegRaBDhkFodHRwczovL2NlcnRpZmljYXRlcy50cnVzdGVkc2VydmljZXMuaW50
+ZWwuY29tL0ludGVsU0dYUm9vdENBLmRlcjAdBgNVHQ4EFgQUImUM1lqdNInzg7SV
+Ur9QGzknBqwwDgYDVR0PAQH/BAQDAgEGMBIGA1UdEwEB/wQIMAYBAf8CAQEwCgYI
+KoZIzj0EAwIDSQAwRgIhAOW/5QkR+S9CiSDcNoowLuPRLsWGf/Yi7GSX94BgwTwg
+AiEA4J0lrHoMs+Xo5o/sX6O9QWxHRAvZUGOdRQ7cvqRXaqI=
+-----END CERTIFICATE-----
+        */
         CertificateChain tcb_info_issuer_chain;
         if (tcb_info_issuer_chain.parse((reinterpret_cast<const char*>(p_quote_collateral->tcb_info_issuer_chain))) != STATUS_OK) {
             ret = SGX_QL_PCK_CERT_CHAIN_ERROR;
@@ -733,7 +806,83 @@ static quote3_error_t qve_get_collateral_dates(const CertificateChain* p_cert_ch
         std::unique_ptr<EnclaveIdentityV2> enclaveIdentity;
         try
         {
-            enclaveIdentity = parser.parse(p_quote_collateral->qe_identity);
+           /*
+           Aashish ::: p_quote_collateral->qe_identity Example
+            
+            "enclaveIdentity": {
+    "id": "QE",
+    "version": 2,
+    "issueDate": "2023-02-12T00:14:06Z",
+    "nextUpdate": "2023-03-14T00:14:06Z",
+    "tcbEvaluationDataNumber": 14,
+    "miscselect": "00000000",
+    "miscselectMask": "FFFFFFFF",
+    "attributes": "11000000000000000000000000000000",
+    "attributesMask": "FBFFFFFFFFFFFFFF0000000000000000",
+    "mrsigner": "8C4F5775D796503E96137F77C68A829A0056AC8DED70140B081B094490C57BFF",
+    "isvprodid": 1,
+    "tcbLevels": [
+        {
+            "tcb": {
+                "isvsvn": 6
+            },
+            "tcbDate": "2022-11-09T00:00:00Z",
+            "tcbStatus": "UpToDate"
+        },
+        {
+            "tcb": {
+                "isvsvn": 5
+            },
+            "tcbDate": "2020-11-11T00:00:00Z",
+            "tcbStatus": "OutOfDate",
+            "advisoryIDs": [
+                "INTEL-SA-00477"
+            ]
+        },
+        {
+            "tcb": {
+                "isvsvn": 4
+            },
+            "tcbDate": "2019-11-13T00:00:00Z",
+            "tcbStatus": "OutOfDate",
+            "advisoryIDs": [
+                "INTEL-SA-00334",
+                "INTEL-SA-00477"
+            ]
+        },
+        {
+            "tcb": {
+                "isvsvn": 2
+            },
+            "tcbDate": "2019-05-15T00:00:00Z",
+            "tcbStatus": "OutOfDate",
+            "advisoryIDs": [
+                "INTEL-SA-00219",
+                "INTEL-SA-00293",
+                "INTEL-SA-00334",
+                "INTEL-SA-00477"
+            ]
+        },
+        {
+            "tcb": {
+                "isvsvn": 1
+            },
+            "tcbDate": "2018-08-15T00:00:00Z",
+            "tcbStatus": "OutOfDate",
+            "advisoryIDs": [
+                "INTEL-SA-00202",
+                "INTEL-SA-00219",
+                "INTEL-SA-00293",
+                "INTEL-SA-00334",
+                "INTEL-SA-00477"
+            ]
+        }
+    ]
+},
+"signature": "e6a7383f61c714ab3f23978336bc3d1961054af35584a5039e173a56f4eef338fe096fa25604b5cca8f78b5e83b6e6d00c3bc29cc82039f6952b00e7eae74fb1"
+}
+            */
+            enclaveIdentity = parser.parse(p_quote_collateral->qe_identity); 
         }
         catch (...)
         {
@@ -741,7 +890,7 @@ static quote3_error_t qve_get_collateral_dates(const CertificateChain* p_cert_ch
             break;
         }
         //supports only EnclaveIdentity V2 and V3
-        //
+        // "Aashish ::: version": 2,
         version = enclaveIdentity->getVersion();
         if (version != 2 && version != 3) {
             ret = SGX_QL_QEIDENTITY_UNSUPPORTED_FORMAT;
@@ -749,7 +898,7 @@ static quote3_error_t qve_get_collateral_dates(const CertificateChain* p_cert_ch
         }
 
         //supports only TCBInfo V2 and V3
-        //
+        // Aashish ::: "version": 3
         version = p_tcb_info_obj->getVersion();
         if (version != 2 && version != 3) {
             ret = SGX_QL_TCBINFO_UNSUPPORTED_FORMAT;
@@ -769,6 +918,41 @@ static quote3_error_t qve_get_collateral_dates(const CertificateChain* p_cert_ch
         }
 
         CertificateChain pck_crl_issuer_chain;
+        /*
+        Aashish :: p_quote_collateral->pck_crl_issuer_chain
+        -----BEGIN CERTIFICATE-----
+MIICmDCCAj6gAwIBAgIVANDoqtp11/kuSReYPHsUZdDV8llNMAoGCCqGSM49BAMC
+MGgxGjAYBgNVBAMMEUludGVsIFNHWCBSb290IENBMRowGAYDVQQKDBFJbnRlbCBD
+b3Jwb3JhdGlvbjEUMBIGA1UEBwwLU2FudGEgQ2xhcmExCzAJBgNVBAgMAkNBMQsw
+CQYDVQQGEwJVUzAeFw0xODA1MjExMDUwMTBaFw0zMzA1MjExMDUwMTBaMHExIzAh
+BgNVBAMMGkludGVsIFNHWCBQQ0sgUHJvY2Vzc29yIENBMRowGAYDVQQKDBFJbnRl
+bCBDb3Jwb3JhdGlvbjEUMBIGA1UEBwwLU2FudGEgQ2xhcmExCzAJBgNVBAgMAkNB
+MQswCQYDVQQGEwJVUzBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABL9q+NMp2IOg
+tdl1bk/uWZ5+TGQm8aCi8z78fs+fKCQ3d+uDzXnVTAT2ZhDCifyIuJwvN3wNBp9i
+HBSSMJMJrBOjgbswgbgwHwYDVR0jBBgwFoAUImUM1lqdNInzg7SVUr9QGzknBqww
+UgYDVR0fBEswSTBHoEWgQ4ZBaHR0cHM6Ly9jZXJ0aWZpY2F0ZXMudHJ1c3RlZHNl
+cnZpY2VzLmludGVsLmNvbS9JbnRlbFNHWFJvb3RDQS5kZXIwHQYDVR0OBBYEFNDo
+qtp11/kuSReYPHsUZdDV8llNMA4GA1UdDwEB/wQEAwIBBjASBgNVHRMBAf8ECDAG
+AQH/AgEAMAoGCCqGSM49BAMCA0gAMEUCIQCJgTbtVqOyZ1m3jqiAXM6QYa6r5sWS
+4y/G7y8uIJGxdwIgRqPvBSKzzQagBLQq5s5A70pdoiaRJ8z/0uDz4NgV91k=
+-----END CERTIFICATE-----
+-----BEGIN CERTIFICATE-----
+MIICjzCCAjSgAwIBAgIUImUM1lqdNInzg7SVUr9QGzknBqwwCgYIKoZIzj0EAwIw
+aDEaMBgGA1UEAwwRSW50ZWwgU0dYIFJvb3QgQ0ExGjAYBgNVBAoMEUludGVsIENv
+cnBvcmF0aW9uMRQwEgYDVQQHDAtTYW50YSBDbGFyYTELMAkGA1UECAwCQ0ExCzAJ
+BgNVBAYTAlVTMB4XDTE4MDUyMTEwNDUxMFoXDTQ5MTIzMTIzNTk1OVowaDEaMBgG
+A1UEAwwRSW50ZWwgU0dYIFJvb3QgQ0ExGjAYBgNVBAoMEUludGVsIENvcnBvcmF0
+aW9uMRQwEgYDVQQHDAtTYW50YSBDbGFyYTELMAkGA1UECAwCQ0ExCzAJBgNVBAYT
+AlVTMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEC6nEwMDIYZOj/iPWsCzaEKi7
+1OiOSLRFhWGjbnBVJfVnkY4u3IjkDYYL0MxO4mqsyYjlBalTVYxFP2sJBK5zlKOB
+uzCBuDAfBgNVHSMEGDAWgBQiZQzWWp00ifODtJVSv1AbOScGrDBSBgNVHR8ESzBJ
+MEegRaBDhkFodHRwczovL2NlcnRpZmljYXRlcy50cnVzdGVkc2VydmljZXMuaW50
+ZWwuY29tL0ludGVsU0dYUm9vdENBLmRlcjAdBgNVHQ4EFgQUImUM1lqdNInzg7SV
+Ur9QGzknBqwwDgYDVR0PAQH/BAQDAgEGMBIGA1UdEwEB/wQIMAYBAf8CAQEwCgYI
+KoZIzj0EAwIDSQAwRgIhAOW/5QkR+S9CiSDcNoowLuPRLsWGf/Yi7GSX94BgwTwg
+AiEA4J0lrHoMs+Xo5o/sX6O9QWxHRAvZUGOdRQ7cvqRXaqI=
+-----END CERTIFICATE-----
+        */
         if (pck_crl_issuer_chain.parse((reinterpret_cast<const char*>(p_quote_collateral->pck_crl_issuer_chain))) != STATUS_OK) {
             ret = SGX_QL_PCK_CERT_CHAIN_ERROR;
             break;
@@ -781,37 +965,38 @@ static quote3_error_t qve_get_collateral_dates(const CertificateChain* p_cert_ch
         std::array <time_t, 8> latest_issue;
         std::array <time_t, 8> latest_expiration;
 
-        earliest_issue[0] = root_ca_crl.getValidity().notBeforeTime;
-        earliest_issue[1] = pck_crl.getValidity().notBeforeTime;
-        earliest_issue[2] = getEarliestIssueDate(&pck_crl_issuer_chain);
-        earliest_issue[3] = getEarliestIssueDate(p_cert_chain_obj);
-        earliest_issue[4] = getEarliestIssueDate(&tcb_info_issuer_chain);
-        earliest_issue[5] = getEarliestIssueDate(&qe_identity_issuer_chain);
-        earliest_issue[6] = p_tcb_info_obj->getIssueDate();
-        earliest_issue[7] = enclaveIdentity->getIssueDate();
+        earliest_issue[0] = root_ca_crl.getValidity().notBeforeTime; //AAshish:: Apr 19 08:31:18 2022
+        earliest_issue[1] = pck_crl.getValidity().notBeforeTime; //Aashish:: Feb 12 00:43:34 2023
+        earliest_issue[2] = getEarliestIssueDate(&pck_crl_issuer_chain); //Aashish:: May 21 10:45:10 2018 GMT
+        earliest_issue[3] = getEarliestIssueDate(p_cert_chain_obj); //Aashish:: May 21 10:45:10 2018 GMT
+        earliest_issue[4] = getEarliestIssueDate(&tcb_info_issuer_chain); //Aashish:: May 21 10:45:10 2018 GMT
+        earliest_issue[5] = getEarliestIssueDate(&qe_identity_issuer_chain); //Aashish:: May 21 10:45:10 2018 GMT
+        earliest_issue[6] = p_tcb_info_obj->getIssueDate(); //Aashish:: 2023-02-12T00:45:00Z
+        earliest_issue[7] = enclaveIdentity->getIssueDate(); //Aashish:: 2023-02-12T00:14:06Z
 
-        earliest_expiration[0] = root_ca_crl.getValidity().notAfterTime;
-        earliest_expiration[1] = pck_crl.getValidity().notAfterTime;
-        earliest_expiration[2] = getEarliestExpirationDate(&pck_crl_issuer_chain);
-        earliest_expiration[3] = getEarliestExpirationDate(p_cert_chain_obj);
-        earliest_expiration[4] = getEarliestExpirationDate(&tcb_info_issuer_chain);
-        earliest_expiration[5] = getEarliestExpirationDate(&qe_identity_issuer_chain);
-        earliest_expiration[6] = p_tcb_info_obj->getNextUpdate();
-        earliest_expiration[7] = enclaveIdentity->getNextUpdate();
+        earliest_expiration[0] = root_ca_crl.getValidity().notAfterTime; //Aashish:: Apr 19 08:31:18 2023 GMT
+        earliest_expiration[1] = pck_crl.getValidity().notAfterTime; //Aashish:: Mar 14 00:43:34 2023 GMT
+        earliest_expiration[2] = getEarliestExpirationDate(&pck_crl_issuer_chain); //Aashish:: May 21 10:50:10 2033 GMT
+        earliest_expiration[3] = getEarliestExpirationDate(p_cert_chain_obj); //Aashish:: Feb 10 12:28:32 2030 GMT
+        earliest_expiration[4] = getEarliestExpirationDate(&tcb_info_issuer_chain); //Dec 31 23:59:59 2049 GMT
+        earliest_expiration[5] = getEarliestExpirationDate(&qe_identity_issuer_chain); //Aashish:: May 21 10:50:10 2025 GMT
+        earliest_expiration[6] = p_tcb_info_obj->getNextUpdate(); //Aashish:: 2023-03-14T00:45:00Z
+        earliest_expiration[7] = enclaveIdentity->getNextUpdate(); //Aashish:: 2023-03-14T00:14:06Z
 
-        latest_issue[0] = root_ca_crl.getValidity().notBeforeTime;
-        latest_issue[1] = pck_crl.getValidity().notBeforeTime;
-        latest_issue[2] = getLatestIssueDate(&pck_crl_issuer_chain);
-        latest_issue[3] = getLatestIssueDate(p_cert_chain_obj);
-        latest_issue[4] = getLatestIssueDate(&tcb_info_issuer_chain);
-        latest_issue[5] = getLatestIssueDate(&qe_identity_issuer_chain);
-        latest_issue[6] = p_tcb_info_obj->getIssueDate();
-        latest_issue[7] = enclaveIdentity->getIssueDate();
-        latest_expiration[0] = root_ca_crl.getValidity().notAfterTime;
-        latest_expiration[1] = pck_crl.getValidity().notAfterTime;
-        latest_expiration[2] = getLatestExpirationDate(&pck_crl_issuer_chain);
+        latest_issue[0] = root_ca_crl.getValidity().notBeforeTime; //AAshish:: Apr 19 08:31:18 2022
+        latest_issue[1] = pck_crl.getValidity().notBeforeTime; //Aashish:: Feb 12 00:43:34 2023
+        latest_issue[2] = getLatestIssueDate(&pck_crl_issuer_chain); //Aashish:: May 21 10:50:10 2018 GMT
+        latest_issue[3] = getLatestIssueDate(p_cert_chain_obj); // Aashish:: Feb 10 12:28:32 2023
+        latest_issue[4] = getLatestIssueDate(&tcb_info_issuer_chain); // Aashish:: May 21 10:50:10 2018 GMT
+        latest_issue[5] = getLatestIssueDate(&qe_identity_issuer_chain); //Aashish:: May 21 10:50:10 2018 GMT
+        latest_issue[6] = p_tcb_info_obj->getIssueDate(); // Aashish:: 2023-02-12T00:45:00Z
+        latest_issue[7] = enclaveIdentity->getIssueDate(); // Aashish:: 2023-02-12T00:14:06Z
+
+        latest_expiration[0] = root_ca_crl.getValidity().notAfterTime; // Aashish:: Apr 19 08:31:18 2023 GMT
+        latest_expiration[1] = pck_crl.getValidity().notAfterTime; // Aashish:: Mar 14 00:43:34 2023 GMT
+        latest_expiration[2] = getLatestExpirationDate(&pck_crl_issuer_chain); // 
         latest_expiration[3] = getLatestExpirationDate(p_cert_chain_obj);
-        latest_expiration[4] = getLatestExpirationDate(&tcb_info_issuer_chain);
+        latest_expiration[4] = getLatestExpirationDate(&tcb_info_issuer_chain); // Aashish:: May 21 10:50:10 2025 GMT
         latest_expiration[5] = getLatestExpirationDate(&qe_identity_issuer_chain);
         latest_expiration[6] = p_tcb_info_obj->getNextUpdate();
         latest_expiration[7] = enclaveIdentity->getNextUpdate();
@@ -1509,6 +1694,68 @@ quote3_error_t sgx_qve_verify_quote(
         //extract PCK Cert chain from the given quote
         //
         ret = extract_chain_from_quote(p_quote, quote_size, &pck_cert_chain_size, &p_pck_cert_chain);
+        /*
+        Aashish:: this is the chain present in the quote
+        -----BEGIN CERTIFICATE-----
+MIIEjjCCBDOgAwIBAgIUEt+iDchPru1MlYTbGLJfMrR3MfkwCgYIKoZIzj0EAwIw
+cTEjMCEGA1UEAwwaSW50ZWwgU0dYIFBDSyBQcm9jZXNzb3IgQ0ExGjAYBgNVBAoM
+EUludGVsIENvcnBvcmF0aW9uMRQwEgYDVQQHDAtTYW50YSBDbGFyYTELMAkGA1UE
+CAwCQ0ExCzAJBgNVBAYTAlVTMB4XDTIzMDIxMDEyMjgzMloXDTMwMDIxMDEyMjgz
+MlowcDEiMCAGA1UEAwwZSW50ZWwgU0dYIFBDSyBDZXJ0aWZpY2F0ZTEaMBgGA1UE
+CgwRSW50ZWwgQ29ycG9yYXRpb24xFDASBgNVBAcMC1NhbnRhIENsYXJhMQswCQYD
+VQQIDAJDQTELMAkGA1UEBhMCVVMwWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAAQv
+Vw5moChn1gU3g/u8UUin4VCvC9s/5BQO4kfMgQ9oHrtW6oc1fNO1lPlVfRPj2trE
+Qty1ADNKqsmjvPj2BrxVo4ICqDCCAqQwHwYDVR0jBBgwFoAU0Oiq2nXX+S5JF5g8
+exRl0NXyWU0wbAYDVR0fBGUwYzBhoF+gXYZbaHR0cHM6Ly9hcGkudHJ1c3RlZHNl
+cnZpY2VzLmludGVsLmNvbS9zZ3gvY2VydGlmaWNhdGlvbi92NC9wY2tjcmw/Y2E9
+cHJvY2Vzc29yJmVuY29kaW5nPWRlcjAdBgNVHQ4EFgQUpT2ZRD+1EECNqdco65NG
+m5acqqowDgYDVR0PAQH/BAQDAgbAMAwGA1UdEwEB/wQCMAAwggHUBgkqhkiG+E0B
+DQEEggHFMIIBwTAeBgoqhkiG+E0BDQEBBBBo3kVcSHexMA/knI1WFSR0MIIBZAYK
+KoZIhvhNAQ0BAjCCAVQwEAYLKoZIhvhNAQ0BAgECARQwEAYLKoZIhvhNAQ0BAgIC
+ARQwEAYLKoZIhvhNAQ0BAgMCAQIwEAYLKoZIhvhNAQ0BAgQCAQQwEAYLKoZIhvhN
+AQ0BAgUCAQEwEQYLKoZIhvhNAQ0BAgYCAgCAMBAGCyqGSIb4TQENAQIHAgEOMBAG
+CyqGSIb4TQENAQIIAgEAMBAGCyqGSIb4TQENAQIJAgEAMBAGCyqGSIb4TQENAQIK
+AgEAMBAGCyqGSIb4TQENAQILAgEAMBAGCyqGSIb4TQENAQIMAgEAMBAGCyqGSIb4
+TQENAQINAgEAMBAGCyqGSIb4TQENAQIOAgEAMBAGCyqGSIb4TQENAQIPAgEAMBAG
+CyqGSIb4TQENAQIQAgEAMBAGCyqGSIb4TQENAQIRAgENMB8GCyqGSIb4TQENAQIS
+BBAUFAIEAYAOAAAAAAAAAAAAMBAGCiqGSIb4TQENAQMEAgAAMBQGCiqGSIb4TQEN
+AQQEBgCQbtUAADAPBgoqhkiG+E0BDQEFCgEAMAoGCCqGSM49BAMCA0kAMEYCIQCJ
+H5BWKK4je8vp/gUiPAdx+sR2zq2D0X+CF3oXVJMdHgIhAPFlVYsrkhUVJpyVIN5j
+EGwEGSNSYkWuPN24B5ky1xW1
+-----END CERTIFICATE-----
+-----BEGIN CERTIFICATE-----
+MIICmDCCAj6gAwIBAgIVANDoqtp11/kuSReYPHsUZdDV8llNMAoGCCqGSM49BAMC
+MGgxGjAYBgNVBAMMEUludGVsIFNHWCBSb290IENBMRowGAYDVQQKDBFJbnRlbCBD
+b3Jwb3JhdGlvbjEUMBIGA1UEBwwLU2FudGEgQ2xhcmExCzAJBgNVBAgMAkNBMQsw
+CQYDVQQGEwJVUzAeFw0xODA1MjExMDUwMTBaFw0zMzA1MjExMDUwMTBaMHExIzAh
+BgNVBAMMGkludGVsIFNHWCBQQ0sgUHJvY2Vzc29yIENBMRowGAYDVQQKDBFJbnRl
+bCBDb3Jwb3JhdGlvbjEUMBIGA1UEBwwLU2FudGEgQ2xhcmExCzAJBgNVBAgMAkNB
+MQswCQYDVQQGEwJVUzBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABL9q+NMp2IOg
+tdl1bk/uWZ5+TGQm8aCi8z78fs+fKCQ3d+uDzXnVTAT2ZhDCifyIuJwvN3wNBp9i
+HBSSMJMJrBOjgbswgbgwHwYDVR0jBBgwFoAUImUM1lqdNInzg7SVUr9QGzknBqww
+UgYDVR0fBEswSTBHoEWgQ4ZBaHR0cHM6Ly9jZXJ0aWZpY2F0ZXMudHJ1c3RlZHNl
+cnZpY2VzLmludGVsLmNvbS9JbnRlbFNHWFJvb3RDQS5kZXIwHQYDVR0OBBYEFNDo
+qtp11/kuSReYPHsUZdDV8llNMA4GA1UdDwEB/wQEAwIBBjASBgNVHRMBAf8ECDAG
+AQH/AgEAMAoGCCqGSM49BAMCA0gAMEUCIQCJgTbtVqOyZ1m3jqiAXM6QYa6r5sWS
+4y/G7y8uIJGxdwIgRqPvBSKzzQagBLQq5s5A70pdoiaRJ8z/0uDz4NgV91k=
+-----END CERTIFICATE-----
+-----BEGIN CERTIFICATE-----
+MIICjzCCAjSgAwIBAgIUImUM1lqdNInzg7SVUr9QGzknBqwwCgYIKoZIzj0EAwIw
+aDEaMBgGA1UEAwwRSW50ZWwgU0dYIFJvb3QgQ0ExGjAYBgNVBAoMEUludGVsIENv
+cnBvcmF0aW9uMRQwEgYDVQQHDAtTYW50YSBDbGFyYTELMAkGA1UECAwCQ0ExCzAJ
+BgNVBAYTAlVTMB4XDTE4MDUyMTEwNDUxMFoXDTQ5MTIzMTIzNTk1OVowaDEaMBgG
+A1UEAwwRSW50ZWwgU0dYIFJvb3QgQ0ExGjAYBgNVBAoMEUludGVsIENvcnBvcmF0
+aW9uMRQwEgYDVQQHDAtTYW50YSBDbGFyYTELMAkGA1UECAwCQ0ExCzAJBgNVBAYT
+AlVTMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEC6nEwMDIYZOj/iPWsCzaEKi7
+1OiOSLRFhWGjbnBVJfVnkY4u3IjkDYYL0MxO4mqsyYjlBalTVYxFP2sJBK5zlKOB
+uzCBuDAfBgNVHSMEGDAWgBQiZQzWWp00ifODtJVSv1AbOScGrDBSBgNVHR8ESzBJ
+MEegRaBDhkFodHRwczovL2NlcnRpZmljYXRlcy50cnVzdGVkc2VydmljZXMuaW50
+ZWwuY29tL0ludGVsU0dYUm9vdENBLmRlcjAdBgNVHQ4EFgQUImUM1lqdNInzg7SV
+Ur9QGzknBqwwDgYDVR0PAQH/BAQDAgEGMBIGA1UdEwEB/wQIMAYBAf8CAQEwCgYI
+KoZIzj0EAwIDSQAwRgIhAOW/5QkR+S9CiSDcNoowLuPRLsWGf/Yi7GSX94BgwTwg
+AiEA4J0lrHoMs+Xo5o/sX6O9QWxHRAvZUGOdRQ7cvqRXaqI=
+-----END CERTIFICATE-----
+        */
         printDataf("\nAashish :::tee_verify_evidence ::: sgx_qve_verify_quote ::: extract_chain_from_quote \n");
         printDataf((const char*) p_pck_cert_chain);
         printDataf("\n");
@@ -1519,7 +1766,1191 @@ quote3_error_t sgx_qve_verify_quote(
         try
         {
             //parse tcbInfo JSON string into TcbInfo object
-            //
+            /*
+            Aashish :::: 
+            {
+    "tcbInfo": {
+        "id": "SGX",
+        "version": 3,
+        "issueDate": "2023-02-12T00:45:00Z",
+        "nextUpdate": "2023-03-14T00:45:00Z",
+        "fmspc": "00906ED50000",
+        "pceId": "0000",
+        "tcbType": 0,
+        "tcbEvaluationDataNumber": 14,
+        "tcbLevels": [
+            {
+                "tcb": {
+                    "sgxtcbcomponents": [
+                        {
+                            "svn": 20
+                        },
+                        {
+                            "svn": 20
+                        },
+                        {
+                            "svn": 2
+                        },
+                        {
+                            "svn": 4
+                        },
+                        {
+                            "svn": 1
+                        },
+                        {
+                            "svn": 128
+                        },
+                        {
+                            "svn": 14
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        }
+                    ],
+                    "pcesvn": 13
+                },
+                "tcbDate": "2022-11-09T00:00:00Z",
+                "tcbStatus": "SWHardeningNeeded",
+                "advisoryIDs": [
+                    "INTEL-SA-00334",
+                    "INTEL-SA-00615"
+                ]
+            },
+            {
+                "tcb": {
+                    "sgxtcbcomponents": [
+                        {
+                            "svn": 20
+                        },
+                        {
+                            "svn": 20
+                        },
+                        {
+                            "svn": 2
+                        },
+                        {
+                            "svn": 4
+                        },
+                        {
+                            "svn": 1
+                        },
+                        {
+                            "svn": 128
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        }
+                    ],
+                    "pcesvn": 13
+                },
+                "tcbDate": "2022-11-09T00:00:00Z",
+                "tcbStatus": "ConfigurationAndSWHardeningNeeded",
+                "advisoryIDs": [
+                    "INTEL-SA-00219",
+                    "INTEL-SA-00289",
+                    "INTEL-SA-00334",
+                    "INTEL-SA-00615"
+                ]
+            },
+            {
+                "tcb": {
+                    "sgxtcbcomponents": [
+                        {
+                            "svn": 19
+                        },
+                        {
+                            "svn": 19
+                        },
+                        {
+                            "svn": 2
+                        },
+                        {
+                            "svn": 4
+                        },
+                        {
+                            "svn": 1
+                        },
+                        {
+                            "svn": 128
+                        },
+                        {
+                            "svn": 6
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        }
+                    ],
+                    "pcesvn": 13
+                },
+                "tcbDate": "2021-11-10T00:00:00Z",
+                "tcbStatus": "OutOfDate",
+                "advisoryIDs": [
+                    "INTEL-SA-00614",
+                    "INTEL-SA-00617",
+                    "INTEL-SA-00219",
+                    "INTEL-SA-00289",
+                    "INTEL-SA-00334",
+                    "INTEL-SA-00615"
+                ]
+            },
+            {
+                "tcb": {
+                    "sgxtcbcomponents": [
+                        {
+                            "svn": 19
+                        },
+                        {
+                            "svn": 19
+                        },
+                        {
+                            "svn": 2
+                        },
+                        {
+                            "svn": 4
+                        },
+                        {
+                            "svn": 1
+                        },
+                        {
+                            "svn": 128
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        }
+                    ],
+                    "pcesvn": 13
+                },
+                "tcbDate": "2021-11-10T00:00:00Z",
+                "tcbStatus": "OutOfDateConfigurationNeeded",
+                "advisoryIDs": [
+                    "INTEL-SA-00161",
+                    "INTEL-SA-00614",
+                    "INTEL-SA-00617",
+                    "INTEL-SA-00219",
+                    "INTEL-SA-00289",
+                    "INTEL-SA-00334",
+                    "INTEL-SA-00615"
+                ]
+            },
+            {
+                "tcb": {
+                    "sgxtcbcomponents": [
+                        {
+                            "svn": 17
+                        },
+                        {
+                            "svn": 17
+                        },
+                        {
+                            "svn": 2
+                        },
+                        {
+                            "svn": 4
+                        },
+                        {
+                            "svn": 1
+                        },
+                        {
+                            "svn": 128
+                        },
+                        {
+                            "svn": 6
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        }
+                    ],
+                    "pcesvn": 11
+                },
+                "tcbDate": "2021-11-10T00:00:00Z",
+                "tcbStatus": "OutOfDate",
+                "advisoryIDs": [
+                    "INTEL-SA-00614",
+                    "INTEL-SA-00617",
+                    "INTEL-SA-00161",
+                    "INTEL-SA-00219",
+                    "INTEL-SA-00289",
+                    "INTEL-SA-00334",
+                    "INTEL-SA-00615"
+                ]
+            },
+            {
+                "tcb": {
+                    "sgxtcbcomponents": [
+                        {
+                            "svn": 17
+                        },
+                        {
+                            "svn": 17
+                        },
+                        {
+                            "svn": 2
+                        },
+                        {
+                            "svn": 4
+                        },
+                        {
+                            "svn": 1
+                        },
+                        {
+                            "svn": 128
+                        },
+                        {
+                            "svn": 6
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        }
+                    ],
+                    "pcesvn": 10
+                },
+                "tcbDate": "2020-11-11T00:00:00Z",
+                "tcbStatus": "OutOfDate",
+                "advisoryIDs": [
+                    "INTEL-SA-00161",
+                    "INTEL-SA-00614",
+                    "INTEL-SA-00617",
+                    "INTEL-SA-00219",
+                    "INTEL-SA-00289",
+                    "INTEL-SA-00334",
+                    "INTEL-SA-00615"
+                ]
+            },
+            {
+                "tcb": {
+                    "sgxtcbcomponents": [
+                        {
+                            "svn": 17
+                        },
+                        {
+                            "svn": 17
+                        },
+                        {
+                            "svn": 2
+                        },
+                        {
+                            "svn": 4
+                        },
+                        {
+                            "svn": 1
+                        },
+                        {
+                            "svn": 128
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        }
+                    ],
+                    "pcesvn": 11
+                },
+                "tcbDate": "2021-11-10T00:00:00Z",
+                "tcbStatus": "OutOfDateConfigurationNeeded",
+                "advisoryIDs": [
+                    "INTEL-SA-00161",
+                    "INTEL-SA-00614",
+                    "INTEL-SA-00617",
+                    "INTEL-SA-00219",
+                    "INTEL-SA-00289",
+                    "INTEL-SA-00334",
+                    "INTEL-SA-00615"
+                ]
+            },
+            {
+                "tcb": {
+                    "sgxtcbcomponents": [
+                        {
+                            "svn": 17
+                        },
+                        {
+                            "svn": 17
+                        },
+                        {
+                            "svn": 2
+                        },
+                        {
+                            "svn": 4
+                        },
+                        {
+                            "svn": 1
+                        },
+                        {
+                            "svn": 128
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        }
+                    ],
+                    "pcesvn": 10
+                },
+                "tcbDate": "2020-11-11T00:00:00Z",
+                "tcbStatus": "OutOfDateConfigurationNeeded",
+                "advisoryIDs": [
+                    "INTEL-SA-00477",
+                    "INTEL-SA-00161",
+                    "INTEL-SA-00614",
+                    "INTEL-SA-00617",
+                    "INTEL-SA-00219",
+                    "INTEL-SA-00289",
+                    "INTEL-SA-00334",
+                    "INTEL-SA-00615"
+                ]
+            },
+            {
+                "tcb": {
+                    "sgxtcbcomponents": [
+                        {
+                            "svn": 15
+                        },
+                        {
+                            "svn": 15
+                        },
+                        {
+                            "svn": 2
+                        },
+                        {
+                            "svn": 4
+                        },
+                        {
+                            "svn": 1
+                        },
+                        {
+                            "svn": 128
+                        },
+                        {
+                            "svn": 6
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        }
+                    ],
+                    "pcesvn": 10
+                },
+                "tcbDate": "2020-06-10T00:00:00Z",
+                "tcbStatus": "OutOfDate",
+                "advisoryIDs": [
+                    "INTEL-SA-00381",
+                    "INTEL-SA-00389",
+                    "INTEL-SA-00477",
+                    "INTEL-SA-00161",
+                    "INTEL-SA-00614",
+                    "INTEL-SA-00617",
+                    "INTEL-SA-00219",
+                    "INTEL-SA-00289",
+                    "INTEL-SA-00334",
+                    "INTEL-SA-00615"
+                ]
+            },
+            {
+                "tcb": {
+                    "sgxtcbcomponents": [
+                        {
+                            "svn": 15
+                        },
+                        {
+                            "svn": 15
+                        },
+                        {
+                            "svn": 2
+                        },
+                        {
+                            "svn": 4
+                        },
+                        {
+                            "svn": 1
+                        },
+                        {
+                            "svn": 128
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        }
+                    ],
+                    "pcesvn": 10
+                },
+                "tcbDate": "2020-06-10T00:00:00Z",
+                "tcbStatus": "OutOfDateConfigurationNeeded",
+                "advisoryIDs": [
+                    "INTEL-SA-00161",
+                    "INTEL-SA-00381",
+                    "INTEL-SA-00389",
+                    "INTEL-SA-00477",
+                    "INTEL-SA-00614",
+                    "INTEL-SA-00617",
+                    "INTEL-SA-00219",
+                    "INTEL-SA-00289",
+                    "INTEL-SA-00334",
+                    "INTEL-SA-00615"
+                ]
+            },
+            {
+                "tcb": {
+                    "sgxtcbcomponents": [
+                        {
+                            "svn": 14
+                        },
+                        {
+                            "svn": 14
+                        },
+                        {
+                            "svn": 2
+                        },
+                        {
+                            "svn": 4
+                        },
+                        {
+                            "svn": 1
+                        },
+                        {
+                            "svn": 128
+                        },
+                        {
+                            "svn": 6
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        }
+                    ],
+                    "pcesvn": 10
+                },
+                "tcbDate": "2019-12-11T00:00:00Z",
+                "tcbStatus": "OutOfDate",
+                "advisoryIDs": [
+                    "INTEL-SA-00320",
+                    "INTEL-SA-00329",
+                    "INTEL-SA-00161",
+                    "INTEL-SA-00381",
+                    "INTEL-SA-00389",
+                    "INTEL-SA-00477",
+                    "INTEL-SA-00614",
+                    "INTEL-SA-00617",
+                    "INTEL-SA-00219",
+                    "INTEL-SA-00289",
+                    "INTEL-SA-00334",
+                    "INTEL-SA-00615"
+                ]
+            },
+            {
+                "tcb": {
+                    "sgxtcbcomponents": [
+                        {
+                            "svn": 14
+                        },
+                        {
+                            "svn": 14
+                        },
+                        {
+                            "svn": 2
+                        },
+                        {
+                            "svn": 4
+                        },
+                        {
+                            "svn": 1
+                        },
+                        {
+                            "svn": 128
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        }
+                    ],
+                    "pcesvn": 10
+                },
+                "tcbDate": "2019-12-11T00:00:00Z",
+                "tcbStatus": "OutOfDateConfigurationNeeded",
+                "advisoryIDs": [
+                    "INTEL-SA-00161",
+                    "INTEL-SA-00320",
+                    "INTEL-SA-00329",
+                    "INTEL-SA-00381",
+                    "INTEL-SA-00389",
+                    "INTEL-SA-00477",
+                    "INTEL-SA-00614",
+                    "INTEL-SA-00617",
+                    "INTEL-SA-00219",
+                    "INTEL-SA-00289",
+                    "INTEL-SA-00334",
+                    "INTEL-SA-00615"
+                ]
+            },
+            {
+                "tcb": {
+                    "sgxtcbcomponents": [
+                        {
+                            "svn": 13
+                        },
+                        {
+                            "svn": 13
+                        },
+                        {
+                            "svn": 2
+                        },
+                        {
+                            "svn": 4
+                        },
+                        {
+                            "svn": 1
+                        },
+                        {
+                            "svn": 128
+                        },
+                        {
+                            "svn": 2
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        }
+                    ],
+                    "pcesvn": 9
+                },
+                "tcbDate": "2019-11-13T00:00:00Z",
+                "tcbStatus": "OutOfDate",
+                "advisoryIDs": [
+                    "INTEL-SA-00161",
+                    "INTEL-SA-00320",
+                    "INTEL-SA-00329",
+                    "INTEL-SA-00381",
+                    "INTEL-SA-00389",
+                    "INTEL-SA-00477",
+                    "INTEL-SA-00614",
+                    "INTEL-SA-00617",
+                    "INTEL-SA-00219",
+                    "INTEL-SA-00289",
+                    "INTEL-SA-00334",
+                    "INTEL-SA-00615"
+                ]
+            },
+            {
+                "tcb": {
+                    "sgxtcbcomponents": [
+                        {
+                            "svn": 13
+                        },
+                        {
+                            "svn": 13
+                        },
+                        {
+                            "svn": 2
+                        },
+                        {
+                            "svn": 4
+                        },
+                        {
+                            "svn": 1
+                        },
+                        {
+                            "svn": 128
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        }
+                    ],
+                    "pcesvn": 9
+                },
+                "tcbDate": "2019-11-13T00:00:00Z",
+                "tcbStatus": "OutOfDateConfigurationNeeded",
+                "advisoryIDs": [
+                    "INTEL-SA-00219",
+                    "INTEL-SA-00161",
+                    "INTEL-SA-00320",
+                    "INTEL-SA-00329",
+                    "INTEL-SA-00381",
+                    "INTEL-SA-00389",
+                    "INTEL-SA-00477",
+                    "INTEL-SA-00614",
+                    "INTEL-SA-00617",
+                    "INTEL-SA-00289",
+                    "INTEL-SA-00334",
+                    "INTEL-SA-00615"
+                ]
+            },
+            {
+                "tcb": {
+                    "sgxtcbcomponents": [
+                        {
+                            "svn": 2
+                        },
+                        {
+                            "svn": 2
+                        },
+                        {
+                            "svn": 2
+                        },
+                        {
+                            "svn": 4
+                        },
+                        {
+                            "svn": 1
+                        },
+                        {
+                            "svn": 128
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        }
+                    ],
+                    "pcesvn": 7
+                },
+                "tcbDate": "2019-05-15T00:00:00Z",
+                "tcbStatus": "OutOfDate",
+                "advisoryIDs": [
+                    "INTEL-SA-00220",
+                    "INTEL-SA-00270",
+                    "INTEL-SA-00293",
+                    "INTEL-SA-00219",
+                    "INTEL-SA-00161",
+                    "INTEL-SA-00320",
+                    "INTEL-SA-00329",
+                    "INTEL-SA-00381",
+                    "INTEL-SA-00389",
+                    "INTEL-SA-00477",
+                    "INTEL-SA-00614",
+                    "INTEL-SA-00617",
+                    "INTEL-SA-00289",
+                    "INTEL-SA-00334",
+                    "INTEL-SA-00615"
+                ]
+            },
+            {
+                "tcb": {
+                    "sgxtcbcomponents": [
+                        {
+                            "svn": 1
+                        },
+                        {
+                            "svn": 1
+                        },
+                        {
+                            "svn": 2
+                        },
+                        {
+                            "svn": 4
+                        },
+                        {
+                            "svn": 1
+                        },
+                        {
+                            "svn": 128
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        }
+                    ],
+                    "pcesvn": 7
+                },
+                "tcbDate": "2019-01-09T00:00:00Z",
+                "tcbStatus": "OutOfDate",
+                "advisoryIDs": [
+                    "INTEL-SA-00233",
+                    "INTEL-SA-00220",
+                    "INTEL-SA-00270",
+                    "INTEL-SA-00293",
+                    "INTEL-SA-00219",
+                    "INTEL-SA-00161",
+                    "INTEL-SA-00320",
+                    "INTEL-SA-00329",
+                    "INTEL-SA-00381",
+                    "INTEL-SA-00389",
+                    "INTEL-SA-00477",
+                    "INTEL-SA-00614",
+                    "INTEL-SA-00617",
+                    "INTEL-SA-00289",
+                    "INTEL-SA-00334",
+                    "INTEL-SA-00615"
+                ]
+            },
+            {
+                "tcb": {
+                    "sgxtcbcomponents": [
+                        {
+                            "svn": 1
+                        },
+                        {
+                            "svn": 1
+                        },
+                        {
+                            "svn": 2
+                        },
+                        {
+                            "svn": 4
+                        },
+                        {
+                            "svn": 1
+                        },
+                        {
+                            "svn": 128
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        },
+                        {
+                            "svn": 0
+                        }
+                    ],
+                    "pcesvn": 6
+                },
+                "tcbDate": "2018-08-15T00:00:00Z",
+                "tcbStatus": "OutOfDate",
+                "advisoryIDs": [
+                    "INTEL-SA-00203",
+                    "INTEL-SA-00233",
+                    "INTEL-SA-00220",
+                    "INTEL-SA-00270",
+                    "INTEL-SA-00293",
+                    "INTEL-SA-00219",
+                    "INTEL-SA-00161",
+                    "INTEL-SA-00320",
+                    "INTEL-SA-00329",
+                    "INTEL-SA-00381",
+                    "INTEL-SA-00389",
+                    "INTEL-SA-00477",
+                    "INTEL-SA-00614",
+                    "INTEL-SA-00617",
+                    "INTEL-SA-00289",
+                    "INTEL-SA-00334",
+                    "INTEL-SA-00615"
+                ]
+            }
+        ]
+    },
+    "signature": "d154cf2bd7001a3150aaa710e5e5e61846db170e6899eaf146e81f91d4057a48714b1da9b11b7a9b03ab228ba981ab7b285e18e1a943c78de17594579423fa45"
+}
+            */
             tcb_info_obj = json::TcbInfo::parse(p_quote_collateral->tcb_info);
         }
         catch (...)
@@ -1574,6 +3005,18 @@ quote3_error_t sgx_qve_verify_quote(
             crls[0] = root_crl.c_str();
         else {
             printDataf("\nAashish :::tee_verify_evidence ::: sgx_qve_verify_quote ::: root_crl from p_quote_collateral if \n");
+            /*
+            Aashish :::
+            -----BEGIN X509 CRL-----
+MIIBITCByAIBATAKBggqhkjOPQQDAjBoMRowGAYDVQQDDBFJbnRlbCBTR1ggUm9v
+dCBDQTEaMBgGA1UECgwRSW50ZWwgQ29ycG9yYXRpb24xFDASBgNVBAcMC1NhbnRh
+IENsYXJhMQswCQYDVQQIDAJDQTELMAkGA1UEBhMCVVMXDTIyMDQxOTA4MzExOFoX
+DTIzMDQxOTA4MzExOFqgLzAtMAoGA1UdFAQDAgEBMB8GA1UdIwQYMBaAFCJlDNZa
+nTSJ84O0lVK/UBs5JwasMAoGCCqGSM49BAMCA0gAMEUCIQC3gFrPWSETWExFyLDh
+GyuKnbRiohW7+NT9QWU51/WrdQIgf/VphMUZnPKyPZfTexBOwOu1JDZ09BNGiHpr
+37/f60I=
+-----END X509 CRL-----
+            */
             crls[0] = p_quote_collateral->root_ca_crl;
         }
             
@@ -1582,6 +3025,18 @@ quote3_error_t sgx_qve_verify_quote(
             crls[1] = pck_crl.c_str();
         else {
             printDataf("\nAashish :::tee_verify_evidence ::: sgx_qve_verify_quote ::: pck_crl from p_quote_collateral if \n");
+            /*
+            Aashish ::: 
+            -----BEGIN X509 CRL-----
+MIIBKjCB0QIBATAKBggqhkjOPQQDAjBxMSMwIQYDVQQDDBpJbnRlbCBTR1ggUENL
+IFByb2Nlc3NvciBDQTEaMBgGA1UECgwRSW50ZWwgQ29ycG9yYXRpb24xFDASBgNV
+BAcMC1NhbnRhIENsYXJhMQswCQYDVQQIDAJDQTELMAkGA1UEBhMCVVMXDTIzMDIx
+MjAwNDMzNFoXDTIzMDMxNDAwNDMzNFqgLzAtMAoGA1UdFAQDAgEBMB8GA1UdIwQY
+MBaAFNDoqtp11/kuSReYPHsUZdDV8llNMAoGCCqGSM49BAMCA0gAMEUCIQCuYVfV
+Y7xs2eL0PgmUovWQOOnJhtQi0DO4jx3sJ4W53QIgLya8sHXVFZZhy7C18d6nAgDi
+myIIMKqCbbP/VEKiVHw=
+-----END X509 CRL-----
+            */
             crls[1] = p_quote_collateral->pck_crl;
         }
             
@@ -1685,7 +3140,7 @@ quote3_error_t sgx_qve_verify_quote(
         }
 
         //parse and verify the quote, update verification results
-        //
+        // Aashish :: this is important
         collateral_verification_res = sgxAttestationVerifyQuote(p_quote, quote_size, chain.getPckCert()->getPem().c_str(), crls[1], p_quote_collateral->tcb_info, p_quote_collateral->qe_identity);
         *p_quote_verification_result = status_error_to_ql_qve_result(collateral_verification_res);
 
